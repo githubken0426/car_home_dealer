@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" 
+"http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>	
+	 <constant name="struts.i18n.encoding" value="UTF-8"/>
+	 <!-- 指定默认编码集 ，作用于HttpServletRequest的setCharacterEncoding（）
+	 		和freemarker，vilocity的输出 -->
+	<constant name="struts.configuration.xmlreload" value="true"/>
+	<!-- 当struts配置文件修改时是否自动加载 -->
+	<constant name="struts.devMode" value="true"/>
+	<!-- 开发模式下打印详细的错误信息 -->
+	<constant name="struts.ui.theme" value="xhtml"/>
+	<!-- 动态方法调用 -->
+	<constant name="struts.enable.DynamicMethodInvocation" value="true"/>
+	<constant name="struts.objectFactory.spring.autoWire.alwaysRespect" value="true" />
+	<!-- 上传文件大小限制 50M-->
+	<constant name="struts.multipart.maxSize" value="52428800"/> 
+	
+	<!-- struts-action -->
+	<include file="strutsxml/struts-dealerlogin.xml" />
+	<include file="strutsxml/struts-article.xml"/>
+	<include file="strutsxml/struts-experttop.xml"/>
+	<include file="strutsxml/struts-promotion.xml"/>
+	<include file="strutsxml/struts-shop.xml" />
+	<include file="strutsxml/struts-homeCarousel.xml" />
+	<include file="strutsxml/struts-selfDrivingTrowelling.xml" />
+	
+	<package name="globalResult" namespace="/"  extends="struts-default"> 
+		<!-- 配置拦截器 -->
+		<interceptors>
+			<interceptor name="authrity" class="com.gtercn.carhome.dealer.cms.intercept.AuthrityInterceptor" />
+			<!--  拦截器栈-->
+			<interceptor-stack name="myInterceptor">
+				<interceptor-ref name="defaultStack"/>
+				<interceptor-ref name="authrity" />
+			</interceptor-stack>
+		</interceptors>
+			<!-- 设置默认拦截器 -->
+		<default-interceptor-ref name="myInterceptor"/>
+		
+        <global-results>  
+            <result name="error">/jsp/common/error.jsp</result>
+            <result name="input">/jsp/center.jsp</result>
+        </global-results>
+        
+        <global-exception-mappings>
+        	<exception-mapping result="error" exception="java.lang.Exception"/>
+        </global-exception-mappings>
+    </package>  
+    
+</struts>    
