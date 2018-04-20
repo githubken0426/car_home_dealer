@@ -232,7 +232,6 @@ public class ArticleAction extends ActionSupport {
 		}
 		return null;
 	}
-
 	/**
 	 * 修改数据(进入画面)
 	 * 
