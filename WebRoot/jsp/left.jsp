@@ -51,7 +51,29 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     	<i class="fa fa-angle-double-right"></i>自驾游管理</a></li>
                 </ul>
             </li>
-        </ul>
+
+			<li class="treeview">
+				<a href="javascript:void(0);"> <i
+					class="fa fa-bar-chart-o"></i> <span>商城管理</span> <i
+					class="fa fa-angle-left pull-right"></i>
+				</a>
+				<ul class="treeview-menu">
+					<li><a href="javascript:void(0);"
+						onclick="setMainContent('expert_listData.action');"> <i
+							class="fa fa-angle-double-right"></i>商城达人管理
+					</a></li>
+
+					<li><a href="javascript:void(0);"
+						onclick="setMainContent('goods_list.action');"> <i
+							class="fa fa-angle-double-right"></i>商品管理
+					</a></li>
+
+					<li><a href="javascript:void(0);"
+						onclick="setMainContent('order_list.action');"> <i
+							class="fa fa-angle-double-right"></i>订单管理
+					</a></li>
+				</ul></li>
+		</ul>
     </div>
     <!-- /.div -->
 </div>

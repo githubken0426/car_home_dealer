@@ -17,13 +17,20 @@
 	<constant name="struts.multipart.maxSize" value="52428800"/> 
 	
 	<!-- struts-action -->
-	<include file="strutsxml/struts-dealerlogin.xml" />
-	<include file="strutsxml/struts-article.xml"/>
-	<include file="strutsxml/struts-experttop.xml"/>
-	<include file="strutsxml/struts-promotion.xml"/>
-	<include file="strutsxml/struts-shop.xml" />
-	<include file="strutsxml/struts-homeCarousel.xml" />
-	<include file="strutsxml/struts-selfDrivingTrowelling.xml" />
+	<include file="strutsxml/common/struts-dealerlogin.xml" />
+	<include file="strutsxml/common/struts-article.xml"/>
+	<include file="strutsxml/common/struts-experttop.xml"/>
+	<include file="strutsxml/common/struts-promotion.xml"/>
+	<include file="strutsxml/common/struts-shop.xml" />
+	<include file="strutsxml/common/struts-homeCarousel.xml" />
+	<include file="strutsxml/common/struts-selfDrivingTrowelling.xml" />
+	<!-- 电商管理 -->
+	<include file="strutsxml/shopping/struts-expert.xml" />
+	<!-- <include file="strutsxml/shopping/struts-goods.xml" />
+	<include file="strutsxml/shopping/struts-goodsbrand.xml" />
+	<include file="strutsxml/shopping/struts-fileupload.xml" />
+	<include file="strutsxml/shopping/struts-order.xml" />
+	<include file="strutsxml/shopping/struts-category.xml" /> -->
 	
 	<package name="globalResult" namespace="/"  extends="struts-default"> 
 		<!-- 配置拦截器 -->

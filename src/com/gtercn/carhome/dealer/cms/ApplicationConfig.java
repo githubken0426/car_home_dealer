@@ -66,6 +66,18 @@ public final class ApplicationConfig {
 	public final static String FTP_PROMOTION_PATH = "promotion";
 	
 	/**
+	 * 电商相关图片路径
+	 */
+	public final static String FTP_SHOPPING_PATH = "shopping";
+	public final static String FTP_CATEGORY_PATH = "category";
+	public final static String FTP_ADVER_PATH = "advertisement";
+	public final static String FTP_BRAND_PATH = "brandlogo";
+	public final static String FTP_GOODS_PATH = "goods";
+	public final static String FTP_SMALL_PATH = "small";
+	public final static String FTP_BIG_PATH = "big";
+	public final static String FTP_DETAIL_PATH = "detail";
+	
+	/**
 	 * 获取并追加ftp服务器路径 
 	 * 可在实体类set方法中可调用此方法
 	 * 追加ftp_ip

@@ -1,12 +1,10 @@
-package com.gtercn.carhome.dealer.cms.entity;
+package com.gtercn.carhome.dealer.cms.entity.shopping;
 
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import com.gtercn.carhome.dealer.cms.ApplicationConfig;
-
-public class ExpertTop {
+public class Expert {
 	private String id;
 	private String userId;
 	private String topTitle;
@@ -20,10 +18,13 @@ public class ExpertTop {
 	private String expertDisplayPicList;
 	private String expertDiscriptionDetail;
 	private String deleteFlag;
+	private Integer isInn;
+	private String cityCode;
 	private Date insertTime;
 	private Date updateTime;
+	private String categoryTitle;
 	private List<String> displayList;
-
+	
 	public String getId() {
 		return id;
 	}
@@ -70,9 +71,7 @@ public class ExpertTop {
 	}
 
 	public void setExpertPortraitUrl(String expertPortraitUrl) {
-		String url = (expertPortraitUrl == null) ? null : ApplicationConfig
-				.appendFtpIpToURL(expertPortraitUrl.trim());
-		this.expertPortraitUrl = url;
+		this.expertPortraitUrl = expertPortraitUrl;
 	}
 
 	public String getExpertWechatNumber() {
@@ -115,10 +114,8 @@ public class ExpertTop {
 	}
 
 	public void setExpertDisplayPicList(String expertDisplayPicList) {
-		String url = (expertDisplayPicList == null) ? null : ApplicationConfig
-				.appendFtpIpToURL(expertDisplayPicList.trim());
-		this.expertDisplayPicList = url;
-		this.displayList = (url == null) ? null : Arrays.asList(url.split(","));
+		this.expertDisplayPicList = expertDisplayPicList;
+		this.displayList = (expertDisplayPicList == null) ? null : Arrays.asList(expertDisplayPicList.split(","));
 	}
 
 	public String getExpertDiscriptionDetail() {
@@ -160,5 +157,29 @@ public class ExpertTop {
 
 	public void setDisplayList(List<String> displayList) {
 		this.displayList = displayList;
+	}
+
+	public Integer getIsInn() {
+		return isInn;
+	}
+
+	public void setIsInn(Integer isInn) {
+		this.isInn = isInn;
+	}
+
+	public String getCityCode() {
+		return cityCode;
+	}
+
+	public void setCityCode(String cityCode) {
+		this.cityCode = cityCode;
+	}
+
+	public String getCategoryTitle() {
+		return categoryTitle;
+	}
+
+	public void setCategoryTitle(String categoryTitle) {
+		this.categoryTitle = categoryTitle;
 	}
 }
