@@ -19,7 +19,6 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import com.gtercn.carhome.dealer.cms.ApplicationConfig;
 
 
-
 /**
  * ftp上传文件
  * 
@@ -31,9 +30,7 @@ public class UploadFtpFileTools {
 	static String userName = ApplicationConfig.FTP_USERNAME;
 	static String passWord = ApplicationConfig.FTP_PASSWORD;
 
-	public static boolean uploadFile(String[] paths, String filename,
-			InputStream input) {
-		boolean success = false;
+	public static boolean uploadFile(String[] paths, String filename,InputStream input)  throws IOException {
 		FTPClient ftp = new FTPClient();
 		try {
 			ftp.connect(ip, port);
@@ -41,66 +38,33 @@ public class UploadFtpFileTools {
 			int reply = ftp.getReplyCode();
 			if (!FTPReply.isPositiveCompletion(reply)) {
 				ftp.disconnect();
-				boolean bool1 = success;
-				return bool1;
+				return false;
 			}
-			String[] arrayOfString = paths;
-			int j = paths.length;
-			for (int i = 0; i < j; i++) {
-				String path = arrayOfString[i];
+			for (String path : paths) {
 				ftp.makeDirectory(path);
 				ftp.changeWorkingDirectory(path);
 			}
-
-			ftp.setFileType(2);
-			ftp.storeFile(filename, input);
-			success = true;
+			ftp.setBufferSize(1024);
+			ftp.setFileType(FTPClient.BINARY_FILE_TYPE);
+			ftp.enterLocalPassiveMode();
+			ftp.setControlEncoding("UTF-8");
+			filename= new String(filename.getBytes("UTF-8"),"iso-8859-1");
+			boolean result = ftp.storeFile(filename, input);
+			return result;
 		} catch (IOException e) {
 			e.printStackTrace();
-			if (input != null) {
-				try {
-					input.close();
-				} catch (IOException ioe) {
-					e.printStackTrace();
-				}
-			}
-			if (ftp != null) {
-				try {
-					ftp.logout();
-				} catch (IOException ioe) {
-					ioe.printStackTrace();
-				}
-			}
-			if (ftp.isConnected())
-				try {
-					ftp.disconnect();
-				} catch (IOException ioe) {
-					ioe.printStackTrace();
-				}
 		} finally {
 			if (input != null) {
-				try {
-					input.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				input.close();
 			}
 			if (ftp != null) {
-				try {
-					ftp.logout();
-				} catch (IOException ioe) {
-					ioe.printStackTrace();
-				}
+				ftp.logout();
 			}
 			if (ftp.isConnected()) {
-				try {
-					ftp.disconnect();
-				} catch (IOException ioe) {
-					ioe.printStackTrace();
-				}
+				ftp.disconnect();
 			}
 		}
-		return success;
+		return false;
 	}
 
 	/**

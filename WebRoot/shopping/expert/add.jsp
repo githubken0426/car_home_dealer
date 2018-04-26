@@ -254,13 +254,7 @@ response.flushBuffer();%>
 							</td>
 							<td  align="right" nowrap="nowrap" bgcolor="#f1f1f1" height="40px">城市：</td>
 							<td>
-								<select id="cityCode" name="expertTop.cityCode" style="height:25px;margin-left:30px;width:200px;">
-									<c:forEach var="city" items="${cityList}">
-										<option value="${city.id }">
-											${city.cityName}
-										</option>
-									</c:forEach>
-								</select>
+								<input type="hidden" name="expertTop.cityCode" value="${cityId }" />
 							</td>
 						</tr>
 						<tr>

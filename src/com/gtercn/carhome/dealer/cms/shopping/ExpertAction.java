@@ -21,10 +21,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.gtercn.carhome.dealer.cms.ApplicationConfig;
 import com.gtercn.carhome.dealer.cms.entity.APIUser;
+import com.gtercn.carhome.dealer.cms.entity.City;
 import com.gtercn.carhome.dealer.cms.entity.DealerUser;
 import com.gtercn.carhome.dealer.cms.entity.shopping.Expert;
 import com.gtercn.carhome.dealer.cms.entity.shopping.GoodsCategory;
 import com.gtercn.carhome.dealer.cms.service.apiuser.APIUserService;
+import com.gtercn.carhome.dealer.cms.service.city.CityService;
 import com.gtercn.carhome.dealer.cms.service.shopping.category.GoodsCategoryService;
 import com.gtercn.carhome.dealer.cms.service.shopping.expert.ExpertService;
 import com.gtercn.carhome.dealer.cms.util.CommonUtil;
@@ -51,6 +53,8 @@ public class ExpertAction extends ActionSupport {
 	private GoodsCategoryService goodsCategoryService;
 	@Autowired
 	private APIUserService apiUserService;
+	@Autowired
+	private CityService cityService;
 	
 	private APIUser apiUser;
 	private Expert expertTop;
@@ -112,7 +116,7 @@ public class ExpertAction extends ActionSupport {
 			context.put("totalPages", totalPages);
 			context.put("totalCount", totalCount);
 			context.put("currentIndex", currentIndex);
-
+			
 			context.put("expertName", expertName);
 			context.put("category", category);
 		} catch (Exception e) {
@@ -129,8 +133,15 @@ public class ExpertAction extends ActionSupport {
 	 */
 	public String addDataPage(){
 		ActionContext context = ActionContext.getContext();
+		Map<String,Object> session=context.getSession();
 		HttpServletRequest request = ServletActionContext.getRequest();
 		try {
+			DealerUser user = (DealerUser) session.get("dealer_user");
+			String cityCode =ApplicationConfig.DEFAULT_CITY_CODE;
+			if(null!=user) 
+				cityCode = user.getCityCode();
+			City city=cityService.getDataByCityCode(cityCode);
+			String cityId=city!=null?city.getId():"";
 			int currentIndex = 0;// 当前页
 			String index = request.getParameter("backPageNo");// 返回，记录列表页数据
 			if (index != null && index != "") {
@@ -142,6 +153,7 @@ public class ExpertAction extends ActionSupport {
 			String category = request.getParameter("category");
 			List<GoodsCategory> categoryList = goodsCategoryService.selectAllCategory();
 			
+			context.put("cityId", cityId);
 			context.put("categoryList", categoryList);
 			context.put("currentIndex", currentIndex);
 			context.put("expertName", expertName);
@@ -162,7 +174,6 @@ public class ExpertAction extends ActionSupport {
 	public String addData() throws IOException {
 		ServletResponse response = ServletActionContext.getResponse();
 		HttpServletRequest request = ServletActionContext.getRequest();
-		
 		MultiPartRequestWrapper multipartRequest = (MultiPartRequestWrapper) request;
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("text/html; charset=utf-8");
@@ -296,7 +307,15 @@ public class ExpertAction extends ActionSupport {
 	public String updateDataPage(){
 		ActionContext context = ActionContext.getContext();
 		HttpServletRequest request = ServletActionContext.getRequest();
+		Map<String,Object> session=context.getSession();
 		try {
+			DealerUser dealuser = (DealerUser) session.get("dealer_user");
+			String cityCode =ApplicationConfig.DEFAULT_CITY_CODE;
+			if(null!=dealuser) 
+				cityCode = dealuser.getCityCode();
+			City city=cityService.getDataByCityCode(cityCode);
+			String cityId=city!=null?city.getId():"";
+			
 			String id = request.getParameter("id");
 			int currentIndex = 0;// 当前页
 			String index = request.getParameter("backPageNo");// 返回，记录列表页数据
@@ -319,6 +338,7 @@ public class ExpertAction extends ActionSupport {
 				context.put("displayList",expert.getDisplayList());
 			}
 			//记录列表页查询及分页数据
+			context.put("cityId", cityId);
 			context.put("currentIndex", currentIndex);
 			context.put("expertName", expertName);
 			context.put("category", category);
