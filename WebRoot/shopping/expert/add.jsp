@@ -253,9 +253,7 @@ response.flushBuffer();%>
 								</select>
 							</td>
 							<td  align="right" nowrap="nowrap" bgcolor="#f1f1f1" height="40px">城市：</td>
-							<td>
-								<input type="hidden" name="expertTop.cityCode" value="${cityId }" />
-							</td>
+							<td></td>
 						</tr>
 						<tr>
 							<td align="right" nowrap="nowrap" bgcolor="#f1f1f1" height="40px">达人头像：</td>

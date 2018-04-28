@@ -133,15 +133,8 @@ public class ExpertAction extends ActionSupport {
 	 */
 	public String addDataPage(){
 		ActionContext context = ActionContext.getContext();
-		Map<String,Object> session=context.getSession();
 		HttpServletRequest request = ServletActionContext.getRequest();
 		try {
-			DealerUser user = (DealerUser) session.get("dealer_user");
-			String cityCode =ApplicationConfig.DEFAULT_CITY_CODE;
-			if(null!=user) 
-				cityCode = user.getCityCode();
-			City city=cityService.getDataByCityCode(cityCode);
-			String cityId=city!=null?city.getId():"";
 			int currentIndex = 0;// 当前页
 			String index = request.getParameter("backPageNo");// 返回，记录列表页数据
 			if (index != null && index != "") {
@@ -153,7 +146,6 @@ public class ExpertAction extends ActionSupport {
 			String category = request.getParameter("category");
 			List<GoodsCategory> categoryList = goodsCategoryService.selectAllCategory();
 			
-			context.put("cityId", cityId);
 			context.put("categoryList", categoryList);
 			context.put("currentIndex", currentIndex);
 			context.put("expertName", expertName);
@@ -172,6 +164,7 @@ public class ExpertAction extends ActionSupport {
 	 * @throws IOException 
 	 */
 	public String addData() throws IOException {
+		ActionContext context = ActionContext.getContext();
 		ServletResponse response = ServletActionContext.getResponse();
 		HttpServletRequest request = ServletActionContext.getRequest();
 		MultiPartRequestWrapper multipartRequest = (MultiPartRequestWrapper) request;
@@ -182,6 +175,14 @@ public class ExpertAction extends ActionSupport {
 		InputStream in=null;
 		InputStream expertPortraitIn=null;
 		try {
+			Map<String,Object> session=context.getSession();
+			DealerUser user = (DealerUser) session.get("dealer_user");
+			String cityCode =ApplicationConfig.DEFAULT_CITY_CODE;
+			if(null!=user) 
+				cityCode = user.getCityCode();
+			City city=cityService.getDataByCityCode(cityCode);
+			String cityId=city!=null?city.getId():"";
+			expertTop.setCityCode(cityId);
 			String userId = apiUser.getUserId();
 			boolean isAdd=false;
 			if(!StringUtils.isNotBlank(userId)){
@@ -307,15 +308,7 @@ public class ExpertAction extends ActionSupport {
 	public String updateDataPage(){
 		ActionContext context = ActionContext.getContext();
 		HttpServletRequest request = ServletActionContext.getRequest();
-		Map<String,Object> session=context.getSession();
 		try {
-			DealerUser dealuser = (DealerUser) session.get("dealer_user");
-			String cityCode =ApplicationConfig.DEFAULT_CITY_CODE;
-			if(null!=dealuser) 
-				cityCode = dealuser.getCityCode();
-			City city=cityService.getDataByCityCode(cityCode);
-			String cityId=city!=null?city.getId():"";
-			
 			String id = request.getParameter("id");
 			int currentIndex = 0;// 当前页
 			String index = request.getParameter("backPageNo");// 返回，记录列表页数据
@@ -338,7 +331,6 @@ public class ExpertAction extends ActionSupport {
 				context.put("displayList",expert.getDisplayList());
 			}
 			//记录列表页查询及分页数据
-			context.put("cityId", cityId);
 			context.put("currentIndex", currentIndex);
 			context.put("expertName", expertName);
 			context.put("category", category);
@@ -485,5 +477,4 @@ public class ExpertAction extends ActionSupport {
 		}
 		return null;
 	}
-	
 }
