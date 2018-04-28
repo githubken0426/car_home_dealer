@@ -86,7 +86,9 @@ public class ExpertAction extends ActionSupport {
 			String cityCode =ApplicationConfig.DEFAULT_CITY_CODE;
 			if(null!=user) 
 				cityCode = user.getCityCode();
-			map.put("cityCode", cityCode);
+			City city = cityService.getDataByCityCode(cityCode);
+			String cityId = city != null ? city.getId() : "";
+			map.put("cityId", cityId);
 			// 接收查询参数
 			String expertName = request.getParameter("expertName");
 			if (StringUtils.isNotBlank(expertName)) {
