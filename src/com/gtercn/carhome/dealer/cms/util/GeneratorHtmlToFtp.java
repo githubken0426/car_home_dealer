@@ -106,6 +106,7 @@ public final class GeneratorHtmlToFtp {
 		return sb.toString();
 	}
 
+	@SuppressWarnings("resource")
 	public static File test(String targetPath,String content) throws IOException {
 		StringBuffer sb = new StringBuffer();
 		BufferedWriter write=null;

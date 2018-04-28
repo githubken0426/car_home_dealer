@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.gtercn.carhome.dealer.cms.dao.FavorMapper;
-import com.gtercn.carhome.dealer.cms.dao.RescueMapper;
 import com.gtercn.carhome.dealer.cms.dao.ShopMapper;
 import com.gtercn.carhome.dealer.cms.entity.Rescue;
 import com.gtercn.carhome.dealer.cms.entity.ServiceEn;
@@ -139,13 +138,11 @@ public class ShopServiceImpl implements ShopService {
 
 	@Override
 	public int addSomeData(Shop entity, Map<String, Object> map) throws Exception {
-		
 		//取数据
 		String[] rescueServiceArr = null;
 		String experience = null;
 		String myFileFileName = null;
 		String productDescription = null;
-		String shopDescription = null;
 		String repairService = null;
 		String cleanService = null;
 		String maintainService = null;
@@ -161,9 +158,6 @@ public class ShopServiceImpl implements ShopService {
 		}
 		if (map.get("productDescription") != null) {
 			productDescription = map.get("productDescription").toString();
-		}
-		if (map.get("shopDescription") != null) {
-			shopDescription = map.get("shopDescription").toString();
 		}
 		if (map.get("repairService") != null) {
 			repairService = map.get("repairService").toString();

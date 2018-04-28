@@ -85,9 +85,8 @@ public class FtpUploader {
 		return new BaseState(false, 4);
 	}
 
-	@SuppressWarnings("unchecked")
 	private static boolean validType(String type, String[] allowTypes) {
-		List list = Arrays.asList(allowTypes);
+		List<String> list = Arrays.asList(allowTypes);
 		return list.contains(type);
 	}
 }
