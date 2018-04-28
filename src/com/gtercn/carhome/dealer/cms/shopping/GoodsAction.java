@@ -17,12 +17,14 @@ import org.apache.struts2.ServletActionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.gtercn.carhome.dealer.cms.ApplicationConfig;
+import com.gtercn.carhome.dealer.cms.entity.City;
 import com.gtercn.carhome.dealer.cms.entity.DealerUser;
 import com.gtercn.carhome.dealer.cms.entity.shopping.Goods;
 import com.gtercn.carhome.dealer.cms.entity.shopping.GoodsBrand;
 import com.gtercn.carhome.dealer.cms.entity.shopping.GoodsCategory;
 import com.gtercn.carhome.dealer.cms.entity.shopping.Spec;
 import com.gtercn.carhome.dealer.cms.entity.shopping.SpecItemGoodsRelation;
+import com.gtercn.carhome.dealer.cms.service.city.CityService;
 import com.gtercn.carhome.dealer.cms.service.shopping.brand.GoodsBrandService;
 import com.gtercn.carhome.dealer.cms.service.shopping.category.GoodsCategoryService;
 import com.gtercn.carhome.dealer.cms.service.shopping.goods.GoodsService;
@@ -48,6 +50,8 @@ public class GoodsAction extends ActionSupport {
 	private GoodsBrandService goodsBrandService;
 	@Autowired
 	private SpecService specService;
+	@Autowired
+	private CityService cityService;
 	
 	private Goods entity;
 	public Goods getEntity() {
@@ -72,7 +76,9 @@ public class GoodsAction extends ActionSupport {
 			String cityCode =ApplicationConfig.DEFAULT_CITY_CODE;
 			if(null!=user) 
 				cityCode = user.getCityCode();
-			map.put("cityCode", cityCode);
+			City city = cityService.getDataByCityCode(cityCode);
+			String cityId = city != null ? city.getId() : "";
+			map.put("cityId", cityId);
 			String title = request.getParameter("title");
 			if (title != null && !title.equals("")) {
 				title = URLDecoder.decode(title, "UTF-8");
@@ -192,10 +198,8 @@ public class GoodsAction extends ActionSupport {
 			String cityCode =ApplicationConfig.DEFAULT_CITY_CODE;
 			if(null!=user) 
 				cityCode = user.getCityCode();
-			/**
-			 * 
-			 */
-			String cityId="";
+			City city = cityService.getDataByCityCode(cityCode);
+			String cityId = city != null ? city.getId() : "";
 			entity.setCityId(cityId);
 			String small[]=request.getParameterValues("smallPicture");
 			String smallPaths = CommonUtil.arrayToString(small);
