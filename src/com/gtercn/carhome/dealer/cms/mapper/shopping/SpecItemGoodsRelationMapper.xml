@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gtercn.carhome.dealer.cms.dao.shopping.SpecItemGoodsRelationMapper">
+	<resultMap id="BaseResultMap"
+		type="com.gtercn.carhome.dealer.cms.entity.shopping.SpecItemGoodsRelation">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="goods_id" property="goodsId" jdbcType="VARCHAR" />
+		<result column="spec_item_id" property="specItemId" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id, goods_id, spec_item_id
+	</sql>
+	<!-- 根据商品id查询 -->
+	<select id="selectByGoodsId" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from inn_spec_item_goods_relation
+		where goods_id = #{goodsId,jdbcType=INTEGER}
+	</select>
+
+	<delete id="deleteByGoodsId" parameterType="java.lang.String">
+		delete from inn_spec_item_goods_relation
+		where goods_id = #{goodsId,jdbcType=INTEGER}
+	</delete>
+
+	<insert id="insert" parameterType="java.util.List">
+		insert into inn_spec_item_goods_relation (goods_id, spec_item_id)
+		values
+		<foreach collection="list" item="item" separator=",">
+			( #{item.goodsId,jdbcType=INTEGER},
+			#{item.specItemId,jdbcType=VARCHAR})
+		</foreach>
+	</insert>
+</mapper>

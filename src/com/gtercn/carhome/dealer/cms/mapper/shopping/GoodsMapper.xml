@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gtercn.carhome.dealer.cms.dao.shopping.GoodsMapper" >
+  
+  <sql id="Base_Column_List" >
+    id, brand_id, score, sku_code, prime_price, promotion_price, cost_price, product_area, 
+    goods_title, goods_synopsis, goods_description,goods_detail, search_tag, stock, big_picture, small_picture, 
+    sold_number, is_hot, is_new, up_time, down_time, status, city_id, update_time,weight,create_time,
+    (select count(1) from inn_comment where goods_id=G.id) as commentCount,
+    round((select count(1) as total from inn_comment  where goods_id=G.id)/(select count(1) as cou from inn_comment where goods_id=G.id and status!='B')*100,0)
+    as percentage 
+  </sql>
+  
+  <!-- 查询所有 -->
+	<select id="queryAllData" resultType="com.gtercn.carhome.dealer.cms.entity.shopping.Goods" parameterType="java.util.Map">
+		select G.*,(select cn_name from inn_goods_brand where G.brand_id=id) brandName
+		from inn_goods G
+		<where>
+			<!-- city_code=#{cityCode} -->
+			<if test="categoryId!=null and categoryId!=''">
+				and brand_id in (select id from inn_goods_brand where category_id=#{categoryId})
+			</if>
+			<if test="brandId!=null and brandId!=''">
+				and brand_id =#{brandId}
+			</if>
+			<if test="goodsTitle!=null and goodsTitle!=''">
+				and goods_title like '%${goodsTitle}%'
+			</if>
+			<if test="beginTime!=null and beginTime!=''">
+				and DATE_FORMAT(up_time,'%Y-%m-%d')&gt;=#{beginTime}
+			</if>
+			<if test="endTime!=null and endTime!=''">
+				and DATE_FORMAT(up_time,'%Y-%m-%d')&lt;=#{endTime}
+			</if>
+		</where>
+		order by up_time desc limit #{beginResult},#{pageSize}
+	</select>
+	
+	<!-- 查询所有数据数 -->
+	<select id="getTotalCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+		select count(1) from inn_goods
+		<where>
+			<!-- city_code=#{cityCode} -->
+			<if test="categoryId!=null and categoryId!=''">
+				and brand_id in (select id from inn_goods_brand where category_id=#{categoryId})
+			</if>
+			<if test="brandId!=null and brandId!=''">
+				and brand_id =#{brandId}
+			</if>
+			<if test="goodsTitle!=null and goodsTitle!=''">
+				and goods_title like '%${goodsTitle}%'
+			</if>
+			<if test="beginTime!=null and beginTime!=''">
+				and DATE_FORMAT(up_time,'%Y-%m-%d')&gt;=#{beginTime}
+			</if>
+			<if test="endTime!=null and endTime!=''">
+				and DATE_FORMAT(up_time,'%Y-%m-%d')&lt;=#{endTime}
+			</if>
+		</where>
+	</select>
+	
+	<select id="selectGoodsByCity" resultType="com.gtercn.carhome.dealer.cms.entity.shopping.Goods" parameterType="java.lang.String">
+		select id, brand_id, sku_code,goods_title from inn_goods 
+		<where>
+			status!=1
+			and city_id=#{cityId}
+			<if test="brandId!=null and brandId!='' and brandId!='-1'">
+				and brand_id=#{brandId}
+			</if>
+		</where>
+	</select>
+	
+  <!-- 主键查询 -->
+  <select id="selectByPrimaryKey" resultType="com.gtercn.carhome.dealer.cms.entity.shopping.Goods" parameterType="java.util.Map" >
+    select <include refid="Base_Column_List" />,
+    (select category_id from inn_goods_brand where id=G.brand_id) categoryId 
+    from inn_goods G
+    <where>
+    	id = #{id,jdbcType=VARCHAR}
+    </where>
+  </select>
+  <!-- sku查询 -->
+  <select id="selectBySkuCode" resultType="com.gtercn.carhome.dealer.cms.entity.shopping.Goods" parameterType="java.lang.String" >
+    select G.*,
+    (select cn_name from inn_goods_brand where G.brand_id=id) brandName,
+    (select title from inn_goods_category where id =(select category_id from inn_goods_brand where id=G.brand_id)) categoryId
+    from inn_goods G
+    <where>
+    	sku_code = #{skuCode,jdbcType=VARCHAR}
+    </where>
+  </select>
+  
+  <insert id="insert" parameterType="com.gtercn.carhome.dealer.cms.entity.shopping.Goods" >
+    insert into inn_goods (id, brand_id, score, 
+      sku_code, prime_price, promotion_price, 
+      cost_price, product_area, goods_title, 
+      goods_synopsis, goods_description, search_tag, 
+      stock, small_picture, big_picture,goods_detail, sold_number, 
+      is_hot, is_new, up_time, down_time, 
+      status, weight,city_id, create_time, update_time
+      )
+    values (#{id,jdbcType=VARCHAR}, #{brandId,jdbcType=VARCHAR}, #{score,jdbcType=VARCHAR}, 
+      #{skuCode,jdbcType=VARCHAR}, #{primePrice,jdbcType=DECIMAL}, #{promotionPrice,jdbcType=DECIMAL}, 
+      #{costPrice,jdbcType=DECIMAL}, #{productArea,jdbcType=VARCHAR}, #{goodsTitle,jdbcType=VARCHAR}, 
+      #{goodsSynopsis,jdbcType=VARCHAR}, #{goodsDescription,jdbcType=VARCHAR}, #{searchTag,jdbcType=VARCHAR}, 
+      #{stock,jdbcType=INTEGER}, #{smallPicture,jdbcType=VARCHAR},#{bigPicture,jdbcType=VARCHAR},
+      #{goodsDetail,jdbcType=VARCHAR},#{soldNumber,jdbcType=INTEGER},#{isHot,jdbcType=CHAR},
+      #{isNew,jdbcType=CHAR}, now(), #{downTime,jdbcType=TIMESTAMP},0 , 
+      #{weight,jdbcType=INTEGER}, #{cityId,jdbcType=CHAR}, now(),now())
+  </insert>
+  
+  <update id="update" parameterType="com.gtercn.carhome.dealer.cms.entity.shopping.Goods">
+	update inn_goods G
+	<set>
+		brand_id=#{brandId,jdbcType=VARCHAR},
+		city_id= #{cityId,jdbcType=CHAR},
+		score=#{score,jdbcType=VARCHAR},
+		prime_price=#{primePrice,jdbcType=DECIMAL},
+		promotion_price=#{promotionPrice,jdbcType=DECIMAL},
+		cost_price=#{costPrice,jdbcType=DECIMAL},
+		product_area=#{productArea,jdbcType=VARCHAR},
+		goods_title=#{goodsTitle,jdbcType=VARCHAR},
+		goods_synopsis=#{goodsSynopsis,jdbcType=VARCHAR},
+		goods_description=#{goodsDescription,jdbcType=VARCHAR},
+		search_tag=#{searchTag,jdbcType=VARCHAR},
+		stock=#{stock,jdbcType=INTEGER},
+		small_picture=#{smallPicture,jdbcType=VARCHAR},
+		big_picture=#{bigPicture,jdbcType=VARCHAR},
+		goods_detail=#{goodsDetail,jdbcType=VARCHAR},
+		sold_number=#{soldNumber,jdbcType=INTEGER},
+		is_hot=#{isHot,jdbcType=CHAR},
+		is_new=#{isNew,jdbcType=CHAR},
+		G.status=#{status,jdbcType=INTEGER},
+		<if test="status ==1">
+			down_time=now(),
+		</if>
+		<if test="status ==0">
+			down_time=NULL,
+		</if>
+		weight=#{weight,jdbcType=DOUBLE}
+	</set>
+	where id=#{id,jdbcType=VARCHAR}
+  </update>
+  
+  <update id="deleteBatch" parameterType="java.lang.String">
+		update inn_goods set status =1,down_time=now()
+		where id in
+		<foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id,jdbcType=VARCHAR}
+        </foreach>
+   </update>
+	
+  <select id="selectGoodsByItem" parameterType="java.lang.String" resultType="java.lang.Integer">
+  	select count(1) from inn_goods G
+  	<where>
+  		city_id=#{cityId,jdbcType=VARCHAR}
+  		and brand_id=#{brandId,jdbcType=VARCHAR}
+  		and (select group_concat(spec_item_id order by id separator ",") from inn_spec_item_goods_relation R where R.goods_id=G.id)
+  			=#{itemIds,jdbcType=VARCHAR}
+    	<if test="goodsId!=null and goodsId!=''">
+    		and id !=#{goodsId,jdbcType=VARCHAR}
+    	</if>
+  	</where>
+  </select>
+</mapper>

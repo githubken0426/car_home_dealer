@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gtercn.carhome.dealer.cms.dao.shopping.SpecMapper" >
+  <resultMap id="BaseResultMap" type="com.gtercn.carhome.dealer.cms.entity.shopping.Spec" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="group_id" property="groupId" jdbcType="VARCHAR" />
+    <result column="category_id" property="categoryId" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="filter" property="filter" jdbcType="VARCHAR" />
+    <result column="sort" jdbcType="INTEGER" property="sort" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <collection property="items" column="id" javaType="ArrayList" 
+                ofType="com.gtercn.carhome.dealer.cms.entity.shopping.SpecItem" select="selectItemsBySpecId"/>
+  </resultMap>
+  
+  <select id="selectItemsBySpecId" resultType="com.gtercn.carhome.dealer.cms.entity.shopping.SpecItem" parameterType="java.lang.String" >
+    select * from inn_spec_item where spec_id = #{id}
+  </select>
+  
+  <sql id="Base_Column_List" >
+    id, group_id,category_id, name,filter,sort
+  </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from inn_spec
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 查询商品属性列表 -->
+  <select id="selectGoodsSpec" parameterType="java.util.Map" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from inn_spec
+    <where>
+    	filter='A' and category_id=#{categoryId,jdbcType=VARCHAR}
+    </where>
+    order by sort
+  </select>
+  
+  <select id="selectDetailSpecByGoodsId" parameterType="java.lang.String" resultType="com.gtercn.carhome.dealer.cms.entity.shopping.Spec">
+  	select S.*,I.item as item from inn_spec S inner join inn_spec_item I on S.id=I.spec_id
+	where I.id in 
+	(select id from inn_spec_item where id in  
+		(select spec_item_id from inn_spec_item_goods_relation where goods_id=#{goodsId,jdbcType=VARCHAR}))
+	order by sort
+  </select>
+</mapper>
