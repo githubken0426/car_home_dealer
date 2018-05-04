@@ -77,7 +77,7 @@ response.flushBuffer();
 									</c:forEach>
 								</select>
 							</td>
-							<td width="10%"  align="right" nowrap="nowrap" bgcolor="#f1f1f1" height="40px">城市码：</td>
+							<td width="10%"  align="right" nowrap="nowrap" bgcolor="#f1f1f1" height="40px"></td>
 							<td width="40%" ></td>
 						</tr>
 						<c:forEach var="spec" items="${specList}">
