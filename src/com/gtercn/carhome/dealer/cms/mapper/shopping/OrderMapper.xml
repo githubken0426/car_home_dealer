@@ -96,6 +96,9 @@
 		(select real_name from tc_user L where L.user_id=O.user_id )as userName ,
 		(select expert_name from tb_expert_top L where L.id=O.expert_id )as expertName,
 		(select logistics_no from inn_logistics L where L.id=O.logistics_id )as logisticsNo ,
+		(select shop_name from tc_shop S where S.id=O.shop_id) shopName,
+		(select login_phone from tc_user U where U.user_id=O.user_id) telphone,
+		(select tel_number_list from tc_shop S where S.id=O.shop_id) dealerTelphone,
 		case flag 
 			when 0 then 
 				(select concat('姓名:',ifnull(name,''),',电话',ifnull(phone,''),

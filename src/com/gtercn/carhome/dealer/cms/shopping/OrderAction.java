@@ -1,7 +1,6 @@
 package com.gtercn.carhome.dealer.cms.shopping;
 
 import java.io.PrintWriter;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -26,8 +25,6 @@ import com.gtercn.carhome.dealer.cms.service.city.CityService;
 import com.gtercn.carhome.dealer.cms.service.shopping.ordder.LogisticsService;
 import com.gtercn.carhome.dealer.cms.service.shopping.ordder.OrderService;
 import com.gtercn.carhome.dealer.cms.service.shopping.spec.SpecService;
-import com.gtercn.carhome.dealer.cms.util.AliSMSUtils;
-import com.gtercn.carhome.dealer.cms.util.CommonUtil;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
@@ -216,19 +213,6 @@ public class OrderAction extends ActionSupport {
 		try {
 			String addressId = request.getParameter("addressId");
 			logisticsService.delivery(logistics, addressId);
-			//支付成功，发送短信
-			SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日");
-			String arriveDate = CommonUtil.getDaysAfterTime(ApplicationConfig.ARRIVE_DAY, format);
-			String serviceDate = CommonUtil.getDaysAfterTime(ApplicationConfig.SERVICE_DAY, format);
-			
-			/*if (order.getFlag() == 1) {// 经销商
-				AliSMSUtils.sendUserDealerMsg(order.getTelphone(), orderNo, order.getShopName(), arriveDate,serviceDate);
-				String phone = order.getDealerTelphone();
-				String dealerPhone = CommonUtil.matcherPhone(phone);
-				AliSMSUtils.sendDelaerMsg(dealerPhone, order.getRealname(), orderNo, arriveDate);
-			} else {
-				AliSMSUtils.sendUserSelfMsg(order.getTelphone(), orderNo,arriveDate);
-			}*/
 		} catch (Exception e) {
 			e.printStackTrace();
 			writer.print("<script>alert('发货失败!');window.location.href='order_list.action';</script>");

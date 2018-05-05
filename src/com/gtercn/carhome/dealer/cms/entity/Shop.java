@@ -4,67 +4,37 @@ import java.util.Date;
 
 public class Shop {
     private String id;
-
     private String rescueService;
-
     private String repairService;
-
     private String cleanService;
-
     private String maintainService;
-
     private String tyreService;
-
     private String shopPicUrl;
-
     private String shopName;
-
     private String shopScore;
-
     private String shopDescription;
-
     private String longitude;
-
     private String latitude;
-
     private String province;
-
     private String city;
-
     private String district;
-
     private String detailAddress;
-
     private String telNumberList;
-
     private String displayPicUrlList;
-
     private Integer isTop;
-
     private Integer displayPriority;
-
     private Integer deleteFlag;
-
     private Date insertTime;
-
     private Date updateTime;
     
     private String displayPicUrl1;
-    
     private String displayPicUrl2;
-    
     private String displayPicUrl3;
-    
     private String displayPicUrl4;
-    
     private String displayPicUrl5;
-    
     private String typeValue;
-
     private String experience;
-    
     private String productDescription;
-    
     private String cityCode;
     
     public String getId() {

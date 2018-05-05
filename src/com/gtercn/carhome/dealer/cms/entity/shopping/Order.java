@@ -43,6 +43,9 @@ public class Order {
 	private String address;
 	private String expertName;
 	private String userName;//下单人
+	private String telphone;
+	private String dealerTelphone;
+	private String shopName;
 	
 	public String getId() {
 		return id;
@@ -230,5 +233,23 @@ public class Order {
 	}
 	public void setFlag(Integer flag) {
 		this.flag = flag;
+	}
+	public String getTelphone() {
+		return telphone;
+	}
+	public void setTelphone(String telphone) {
+		this.telphone = telphone;
+	}
+	public String getDealerTelphone() {
+		return dealerTelphone;
+	}
+	public void setDealerTelphone(String dealerTelphone) {
+		this.dealerTelphone = dealerTelphone;
+	}
+	public String getShopName() {
+		return shopName;
+	}
+	public void setShopName(String shopName) {
+		this.shopName = shopName;
 	}
 }

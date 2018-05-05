@@ -222,8 +222,15 @@ response.flushBuffer();
 							<a href="javascript:void(0);" onclick="logisticsDetail('${o.id}','${o.address}')">${o.logisticsNo }</a>
 						</td>
 						<td>
-							<c:if test="${o.orderStatus==2 }">
-							<a href="javascript:void(0);" onclick="shipping('${o.id}','${o.addressId}','${o.address}')">发 货</a>
+							<c:if test="${o.orderStatus==2}">
+								<c:choose>
+									<c:when test="${o.flag==0 }">
+										<a href="javascript:void(0);" onclick="shipping('${o.id}','${o.addressId}','${o.address}')">发 货</a>
+									</c:when>
+									<c:otherwise>
+										<a href="javascript:void(0);" onclick="shipping('${o.id}','${o.shopId}','${o.address}')">发 货</a>
+									</c:otherwise>
+								</c:choose>
 							</c:if>
 						</td>
 					</tr>					
@@ -248,7 +255,7 @@ response.flushBuffer();
 </div>
 <!-- 发货 -->
 <form id="shipForm" action="${pageContext.request.contextPath}/order_delivery" method="post">
-<div id="shipping" style="display: none">
+	<div id="shipping" style="display: none">
 	<table class="table table-condensed" style="margin-bottom:0px;">
 	    <tr>
 	    	<td width="15%" align="center" nowrap="nowrap" bgcolor="#f1f1f1" height="40px">物流名称</td>
@@ -296,12 +303,14 @@ function shipping(orderId,addressId,address){
 	var timestamp = Date.parse(new Date());
 	$("#orderId").val(orderId);
 	$("#addressId").val(addressId);
+	/* 自动生成订单号*/
 	var logisticsNo="";
 	var lstr="INNCGO"+addressId+timestamp;
 	for(var i=0;i<16;i++){
 		logisticsNo+=lstr.charAt(Math.floor(Math.random() * lstr.length));
 	}
-	$("#logisticsNo").val(logisticsNo.toUpperCase());
+	$("#logisticsNo").val(logisticsNo.toUpperCase()); 
+	
 	$("#address").attr("title",address);
 	$("#address").text(address);
 	layer.open({
