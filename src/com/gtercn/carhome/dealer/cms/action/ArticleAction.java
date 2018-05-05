@@ -66,11 +66,8 @@ public class ArticleAction extends ActionSupport {
 		Map<String, Object> session = context.getSession();
 		try {
 			DealerUser user = (DealerUser) session.get("dealer_user");
-			String cityCode = user.getCityCode();
-			cityCode = StringUtils.isNotBlank(cityCode) ? cityCode
-					: ApplicationConfig.DEFAULT_CITY_CODE;
+			String cityCode = user != null ? user.getCityCode() : "";
 			map.put("cityCode", cityCode);
-
 			String expertName = request.getParameter("expertName");
 			if (expertName != null && !expertName.equals("")) {
 				expertName = URLDecoder.decode(expertName, "UTF-8");
@@ -151,12 +148,8 @@ public class ArticleAction extends ActionSupport {
 			String endTime = request.getParameter("endTime");
 
 			DealerUser user = (DealerUser) session.get("dealer_user");
-			String cityCode = user.getCityCode();
-			cityCode = StringUtils.isNotBlank(cityCode) ? cityCode
-					: ApplicationConfig.DEFAULT_CITY_CODE;
-			List<ExpertTop> expertList = expertTopService
-					.queryAllExpert(cityCode);
-
+			String cityCode = user != null ? user.getCityCode() : "";
+			List<ExpertTop> expertList = expertTopService.queryAllExpert(cityCode);
 			context.put("expertList", expertList);
 			context.put("currentIndex", currentIndex);
 			context.put("expertName", expertName);
@@ -192,8 +185,7 @@ public class ArticleAction extends ActionSupport {
 			entity.setId(uuid);
 			entity.setType(3);
 			DealerUser user = (DealerUser) session.get("dealer_user");
-			String cityCode = user.getCityCode();
-			cityCode = StringUtils.isNotBlank(cityCode) ? cityCode : ApplicationConfig.DEFAULT_CITY_CODE;
+			String cityCode = user != null ? user.getCityCode() : "";
 			entity.setCityCode(cityCode);
 
 			String serverPath = request.getSession().getServletContext() .getRealPath("/") + "resources";
@@ -256,11 +248,8 @@ public class ArticleAction extends ActionSupport {
 			String endTime = request.getParameter("endTime");
 
 			DealerUser user = (DealerUser) session.get("dealer_user");
-			String cityCode = user.getCityCode();
-			cityCode = StringUtils.isNotBlank(cityCode) ? cityCode
-					: ApplicationConfig.DEFAULT_CITY_CODE;
-			List<ExpertTop> expertList = expertTopService
-					.queryAllExpert(cityCode);
+			String cityCode = user != null ? user.getCityCode() : "";
+			List<ExpertTop> expertList = expertTopService.queryAllExpert(cityCode);
 			QuestionArticle article = questionArticleService
 					.selectByPrimaryKey(id);
 			context.put("entity", article);

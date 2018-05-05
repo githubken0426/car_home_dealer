@@ -73,9 +73,7 @@ public class GoodsAction extends ActionSupport {
 		Map<String, Object> session = context.getSession();
 		try {
 			DealerUser user = (DealerUser) session.get("dealer_user");
-			String cityCode =ApplicationConfig.DEFAULT_CITY_CODE;
-			if(null!=user) 
-				cityCode = user.getCityCode();
+			String cityCode = user != null ? user.getCityCode() : "";
 			City city = cityService.getDataByCityCode(cityCode);
 			String cityId = city != null ? city.getId() : "";
 			map.put("cityId", cityId);
@@ -195,9 +193,7 @@ public class GoodsAction extends ActionSupport {
 			String sku=CommonUtil.randomUpperCode(20, uuid+ System.currentTimeMillis());
 			entity.setSkuCode(sku);
 			DealerUser user = (DealerUser) session.get("dealer_user");
-			String cityCode =ApplicationConfig.DEFAULT_CITY_CODE;
-			if(null!=user) 
-				cityCode = user.getCityCode();
+			String cityCode = user != null ? user.getCityCode() : "";
 			City city = cityService.getDataByCityCode(cityCode);
 			String cityId = city != null ? city.getId() : "";
 			entity.setCityId(cityId);

@@ -83,9 +83,7 @@ public class ExpertAction extends ActionSupport {
 		HttpServletRequest request = ServletActionContext.getRequest();
 		try {
 			DealerUser user = (DealerUser) session.get("dealer_user");
-			String cityCode =ApplicationConfig.DEFAULT_CITY_CODE;
-			if(null!=user) 
-				cityCode = user.getCityCode();
+			String cityCode = user != null ? user.getCityCode() : "";
 			City city = cityService.getDataByCityCode(cityCode);
 			String cityId = city != null ? city.getId() : "";
 			map.put("cityId", cityId);
@@ -179,9 +177,7 @@ public class ExpertAction extends ActionSupport {
 		try {
 			Map<String,Object> session=context.getSession();
 			DealerUser user = (DealerUser) session.get("dealer_user");
-			String cityCode =ApplicationConfig.DEFAULT_CITY_CODE;
-			if(null!=user) 
-				cityCode = user.getCityCode();
+			String cityCode = user != null ? user.getCityCode() : "";
 			City city=cityService.getDataByCityCode(cityCode);
 			String cityId=city!=null?city.getId():"";
 			expertTop.setCityCode(cityId);

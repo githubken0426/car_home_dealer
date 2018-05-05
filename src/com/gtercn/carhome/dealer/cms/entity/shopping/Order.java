@@ -6,6 +6,7 @@ import java.util.List;
 
 public class Order {
 	private String id;
+	private String cityId;
 	private String userId;
 	private String shopId;
 	private Integer flag;//0:客户，1:经销商
@@ -48,6 +49,12 @@ public class Order {
 	}
 	public void setId(String id) {
 		this.id = id;
+	}
+	public String getCityId() {
+		return cityId;
+	}
+	public void setCityId(String cityId) {
+		this.cityId = cityId;
 	}
 	public String getUserId() {
 		return userId;

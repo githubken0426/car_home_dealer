@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gtercn.carhome.dealer.cms.dao.shopping.OrderMapper">
+	<resultMap id="BaseResultMap" type="com.gtercn.carhome.dealer.cms.entity.shopping.Order">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="user_id" property="userId" jdbcType="VARCHAR" />
+		<result column="shop_id" property="shopId" jdbcType="VARCHAR" />
+		<result column="flag" property="flag" jdbcType="INTEGER" />
+		<result column="expert_id" property="expertId" jdbcType="VARCHAR" />
+		<result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+		<result column="order_status" property="orderStatus" jdbcType="INTEGER" />
+		<result column="order_time" property="orderTime" jdbcType="TIMESTAMP" />
+		<result column="pay_time" property="payTime" jdbcType="TIMESTAMP" />
+		<result column="item_count" property="itemCount" jdbcType="INTEGER" />
+		<result column="total_amount" property="totalAmount" jdbcType="VARCHAR" />
+		<result column="payment" property="payment" jdbcType="VARCHAR" />
+		<result column="address_id" property="addressId" jdbcType="VARCHAR" />
+		<result column="logistics_id" property="logisticsId" jdbcType="VARCHAR" />
+		<result column="pay_channel" property="payChannel" jdbcType="VARCHAR" />
+		<result column="escrow_trade_no" property="escrowTradeNo" jdbcType="VARCHAR" />
+		<result column="buyer_account" property="buyerAccount" jdbcType="VARCHAR" />
+		<result column="customer_mark" property="customerMark" jdbcType="VARCHAR" />
+		<result column="cancel_reason" property="cancelReason" jdbcType="VARCHAR" />
+		<result column="invoice" property="invoice" jdbcType="VARCHAR" />
+		<result column="invoice_no" property="invoiceNo" jdbcType="VARCHAR" />
+		<result column="invoice_type" property="invoiceType" jdbcType="VARCHAR" />
+		<result column="invoice_title" property="invoiceTitle" jdbcType="VARCHAR" />
+		<result column="invoice_content" property="invoiceContent" jdbcType="VARCHAR" />
+		<result column="userName" property="userName" jdbcType="VARCHAR" />
+		<result column="expertName" property="expertName" jdbcType="VARCHAR" />
+		<result column="logisticsNo" property="logisticsNo" jdbcType="VARCHAR" />
+		<result column="address" property="address" jdbcType="VARCHAR" />
+		<collection property="orderDetails" column="id" javaType="ArrayList" 
+			ofType="com.gtercn.carhome.dealer.cms.entity.shopping.OrderDetail" select="selectOrderDetailById" />
+	</resultMap>
+	<select id="selectOrderDetailById" resultType="com.gtercn.carhome.dealer.cms.entity.shopping.OrderDetail" parameterType="java.lang.String">
+		select OD.*,
+		(select goods_title from inn_goods where OD.goods_id=id )as goodsTitle,
+		(select small_picture from inn_goods where OD.goods_id=id )as smallPicture
+		from inn_order_detail OD
+		where OD.order_id = #{id} order by OD.create_time desc
+	</select>
+	
+	<!-- 查询所有 -->
+	<select id="queryAllData" resultType="com.gtercn.carhome.dealer.cms.entity.shopping.Order" parameterType="java.util.Map">
+		select O.*,
+		(select real_name from tc_user L where L.user_id=O.user_id )as userName ,
+		(select expert_name from tb_expert_top L where L.id=O.expert_id )as expertName,
+		(select logistics_no from inn_logistics L where L.id=O.logistics_id )as logisticsNo ,
+		case flag 
+			when 0 then 
+				(select concat('姓名:',ifnull(name,''),',电话',ifnull(phone,''),
+				',地址:',ifnull(province,''),ifnull(city,''),ifnull(district,''),ifnull(address,'')) 
+				from inn_address L where L.id=O.address_id )
+			else
+				(select concat('姓名:',ifnull(shop_name,''),',电话:',ifnull(tel_number_list,''),
+				',地址[',ifnull(province,''),ifnull(city,''),ifnull(district,''),ifnull(detail_address,'')) 
+				from tc_shop S where S.id=O.shop_id )
+		end as address
+		from inn_order O
+		<where>
+			city_id=#{cityId,jdbcType=VARCHAR}
+			<if test="orderNo!=null and orderNo!=''">
+				and order_no =#{orderNo}
+			</if>
+			<if test="expertId!=null and expertId!=''">
+				and expert_id=#{expertId}
+			</if>
+			<if test="orderStatus!=null and orderStatus!=''">
+				and order_status=#{orderStatus}
+			</if>
+		</where>
+		order by order_time desc limit #{beginResult},#{pageSize}
+	</select>
+
+	<!-- 查询所有数据数 -->
+	<select id="getTotalCount" resultType="java.lang.Integer"
+		parameterType="java.util.Map">
+		select count(1) from inn_order
+		<where>
+			city_id=#{cityId,jdbcType=VARCHAR}
+			<if test="orderNo!=null and orderNo!=''">
+				and order_no =#{orderNo}
+			</if>
+			<if test="expertId!=null and expertId!=''">
+				and expert_id=#{expertId}
+			</if>
+			<if test="orderStatus!=null and orderStatus!=''">
+				and order_status=#{orderStatus}
+			</if>
+		</where>
+	</select>
+	
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select O.*,
+		(select real_name from tc_user L where L.user_id=O.user_id )as userName ,
+		(select expert_name from tb_expert_top L where L.id=O.expert_id )as expertName,
+		(select logistics_no from inn_logistics L where L.id=O.logistics_id )as logisticsNo ,
+		case flag 
+			when 0 then 
+				(select concat('姓名:',ifnull(name,''),',电话',ifnull(phone,''),
+				',地址:',ifnull(province,''),ifnull(city,''),ifnull(district,''),ifnull(address,'')) 
+				from inn_address L where L.id=O.address_id )
+			else
+				(select concat('姓名:',ifnull(shop_name,''),',电话:',ifnull(tel_number_list,''),
+				',地址[',ifnull(province,''),ifnull(city,''),ifnull(district,''),ifnull(detail_address,'')) 
+				from tc_shop S where S.id=O.shop_id )
+		end as address
+		from inn_order O where id = #{id,jdbcType=VARCHAR}
+	</select>
+
+	<select id="queryAllExpert" resultType="com.gtercn.carhome.dealer.cms.entity.ExpertTop" parameterType="java.lang.String">
+		select id,user_id,expert_name from tb_expert_top 
+		where delete_flag=0 and is_inn=1 and city_code=#{cityId,jdbcType=VARCHAR}
+	</select>
+	<!-- 更新订单物流 -->
+	<update id="updateOrderLogistics" parameterType="java.lang.String">
+		update inn_order set order_status=4,logistics_id=#{logisticsId,jdbcType=VARCHAR}
+		where id=#{orderId,jdbcType=VARCHAR}
+	</update>
+</mapper>

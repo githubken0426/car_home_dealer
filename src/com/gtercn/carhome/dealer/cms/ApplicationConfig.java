@@ -22,7 +22,8 @@ public final class ApplicationConfig {
 	public static final PropertiesManager CAR_HOME = new PropertiesManager(
 			FileUtil.getClassesPath(new FilePathBean())
 					+ "applicationConfig.properties");
-
+	public static final String LOGISTICS_INFO = CAR_HOME.getValueEncoding("logistics_info", "utf-8");
+	
 	public static final String UEDITOR_FILTER_PATH=CAR_HOME.getValue("ueditor_filter_path");
 	// 分页每页显示数据条数
 	public final static int PAGE_SIZE = 10;
@@ -38,10 +39,6 @@ public final class ApplicationConfig {
 	public final static String FTP_USERNAME = CAR_HOME.getValue("ftp_username");
 	public final static String FTP_PASSWORD = CAR_HOME.getValue("ftp_password");
 
-	/**
-	 * 默认城市编码(阜新)
-	 */
-	public static final String DEFAULT_CITY_CODE="210900";
 	// ftp存储根路径
 	public final static String FTP_ROOTPATH = "carhome";
 	// ftp app版本路径

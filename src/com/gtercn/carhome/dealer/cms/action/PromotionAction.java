@@ -67,8 +67,7 @@ public class PromotionAction extends ActionSupport {
 		Map<String,Object> session=ActionContext.getContext().getSession();
 		try {
 			DealerUser user = (DealerUser) session.get("dealer_user");
-			String cityCode = user.getCityCode();
-			cityCode = StringUtils.isNotBlank(cityCode) ? cityCode : ApplicationConfig.DEFAULT_CITY_CODE;
+			String cityCode = user != null ? user.getCityCode() : "";
 			map.put("cityCode", cityCode);
 			String deleteFlag = request.getParameter("deleteFlag");
 			if (deleteFlag != null && !deleteFlag.equals("-1")) {
@@ -173,8 +172,7 @@ public class PromotionAction extends ActionSupport {
 			String content=promotion.getContent();
 			promotion.setId(uuid);
 			DealerUser user = (DealerUser) session.get("dealer_user");
-			String cityCode = user.getCityCode();
-			cityCode = StringUtils.isNotBlank(cityCode) ? cityCode : ApplicationConfig.DEFAULT_CITY_CODE;
+			String cityCode = user != null ? user.getCityCode() : "";
 			promotion.setCityCode(cityCode);
 			
 			String serverPath =  request.getSession().getServletContext().getRealPath("/")
@@ -386,8 +384,7 @@ public class PromotionAction extends ActionSupport {
 		try {
 			writer = response.getWriter();
 			DealerUser user = (DealerUser) session.get("dealer_user");
-			String cityCode = user.getCityCode();
-			cityCode = StringUtils.isNotBlank(cityCode) ? cityCode : ApplicationConfig.DEFAULT_CITY_CODE;
+			String cityCode = user != null ? user.getCityCode() : "";
 			String shopName = request.getParameter("shopName");
 			String id = request.getParameter("id");
 			map.put("shopName", shopName);

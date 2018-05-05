@@ -81,8 +81,7 @@ public class ExpertTopAction extends ActionSupport {
 		HttpServletRequest request = ServletActionContext.getRequest();
 		try {
 			DealerUser user=(DealerUser) session.get("dealer_user");
-			String cityCode=user.getCityCode();
-			cityCode=StringUtils.isNotBlank(cityCode)? cityCode :ApplicationConfig.DEFAULT_CITY_CODE;
+			String cityCode = user != null ? user.getCityCode() : "";
 			map.put("cityCode", cityCode);
 			// 接收查询参数
 			String expertName = request.getParameter("expertName");
@@ -255,8 +254,7 @@ public class ExpertTopAction extends ActionSupport {
 				}
 			}
 			DealerUser user=(DealerUser) session.get("dealer_user");
-			String cityCode=user.getCityCode();
-			cityCode=StringUtils.isNotBlank(cityCode)? cityCode :ApplicationConfig.DEFAULT_CITY_CODE;
+			String cityCode = user != null ? user.getCityCode() : "";
 			expertTop.setCityCode(cityCode);
 			expertTop.setExpertName(apiUser.getRealName());
 			expertTop.setExpertTelNumber(apiUser.getLoginPhone());
