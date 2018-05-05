@@ -1,3 +1,4 @@
 eclipse.preferences.version=1
-encoding//src/applicationConfig.properties=UTF-8
+encoding//src/resources/aliSMS.properties=UTF-8
+encoding//src/resources/applicationConfig.properties=UTF-8
 encoding/<project>=UTF-8

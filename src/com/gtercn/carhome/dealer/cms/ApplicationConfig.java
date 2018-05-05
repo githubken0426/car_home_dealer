@@ -8,8 +8,6 @@ import com.gtercn.carhome.dealer.cms.util.FilePathBean;
 import com.gtercn.carhome.dealer.cms.util.FileUtil;
 import com.gtercn.carhome.dealer.cms.util.PropertiesManager;
 
-
-
 /**
  * 系统参数设置
  * 
@@ -20,22 +18,37 @@ public final class ApplicationConfig {
 	 * 项目配置文件管理器，支持热加载
 	 */
 	public static final PropertiesManager CAR_HOME = new PropertiesManager(
-			FileUtil.getClassesPath(new FilePathBean())
-					+ "applicationConfig.properties");
+			FileUtil.getClassesPath(new FilePathBean()) + "resources/applicationConfig.properties");
 	public static final String LOGISTICS_INFO = CAR_HOME.getValueEncoding("logistics_info", "utf-8");
-	
-	public static final String UEDITOR_FILTER_PATH=CAR_HOME.getValue("ueditor_filter_path");
+	public static final String UEDITOR_FILTER_PATH = CAR_HOME.getValue("ueditor_filter_path");
 	// 分页每页显示数据条数
 	public final static int PAGE_SIZE = 10;
+	// 预计到达日期
+	public static final Integer ARRIVE_DAY = 5;
+	// 最迟服务日期
+	public static final Integer SERVICE_DAY = 15;
+
+	/**
+	 * 短信服务
+	 */
+	public static final PropertiesManager SMS_PROPERTIES = new PropertiesManager(
+			FileUtil.getClassesPath(new FilePathBean()) + "resources/aliSMS.properties");
+	// 短信key
+	public static final String MESSAGE_ACCESS_KEY = SMS_PROPERTIES.getValue("access_key");
+	// 短信secret
+	public static final String MESSAGE_ACCESS_SECRET = SMS_PROPERTIES.getValue("access_secret");
+	// 短信签名
+	public static final String MESSAGE_SIGN = "顺驾天下";
+	public static final String MESSAGE_USER_SELF = SMS_PROPERTIES.getValue("SMS_TEMPLATE_USERSELF");
+	public static final String MESSAGE_USER_DEALER = SMS_PROPERTIES.getValue("SMS_TEMPLATE_USERDEALER");
+	public static final String MESSAGE_DEALER = SMS_PROPERTIES.getValue("SMS_TEMPLATE_DEALER");
+	public static final String MESSAGE_DEALERSHIPPED = SMS_PROPERTIES.getValue("SMS_TEMPLATE_DEALERSHIPPED");
 
 	// 使用http协议访问ftp资源路径
-	public final static String HTTP_PROTOCOL_IP = CAR_HOME
-			.getValue("http_protocol_ip");
-	
+	public final static String HTTP_PROTOCOL_IP = CAR_HOME.getValue("http_protocol_ip");
 	// ftp服务器信息
 	public final static String FTP_IP = CAR_HOME.getValue("ftp_ip");
-	public final static int FTP_PORT = Integer.parseInt(CAR_HOME
-			.getValue("ftp_port"));
+	public final static int FTP_PORT = Integer.parseInt(CAR_HOME.getValue("ftp_port"));
 	public final static String FTP_USERNAME = CAR_HOME.getValue("ftp_username");
 	public final static String FTP_PASSWORD = CAR_HOME.getValue("ftp_password");
 
@@ -45,23 +58,23 @@ public final class ApplicationConfig {
 	public final static String FTP_VERSION_PATH = "version";
 	// 达人图片存储路径
 	public final static String FTP_EXPERT_PATH = "expert";
-	//达人文章路径
+	// 达人文章路径
 	public final static String FTP_ARTICLE_PATH = "article";
-	//问题墙图片路径
+	// 问题墙图片路径
 	public final static String FTP_QUESTION_PATH = "question";
-	//达人文章生成html路径
+	// 达人文章生成html路径
 	public final static String FTP_HTML_PATH = "htmls";
-	//用户模块
-	public static final String FTP_USERS_PATH="users";
-	//头像文件夹
-	public static final String FTP_AVATAR_PATH="avatar";
-	//首页轮播路径
+	// 用户模块
+	public static final String FTP_USERS_PATH = "users";
+	// 头像文件夹
+	public static final String FTP_AVATAR_PATH = "avatar";
+	// 首页轮播路径
 	public final static String FTP_HOME_CAROUSEL_PATH = "homecarousel";
-	//资讯路径
+	// 资讯路径
 	public final static String FTP_INFORMATION_PATH = "information";
-	//促销
+	// 促销
 	public final static String FTP_PROMOTION_PATH = "promotion";
-	
+
 	/**
 	 * 电商相关图片路径
 	 */
@@ -73,11 +86,10 @@ public final class ApplicationConfig {
 	public final static String FTP_SMALL_PATH = "small";
 	public final static String FTP_BIG_PATH = "big";
 	public final static String FTP_DETAIL_PATH = "detail";
-	
+
 	/**
-	 * 获取并追加ftp服务器路径 
-	 * 可在实体类set方法中可调用此方法
-	 * 追加ftp_ip
+	 * 获取并追加ftp服务器路径 可在实体类set方法中可调用此方法 追加ftp_ip
+	 * 
 	 * @param paths
 	 *            参数前必须有斜杠(/)
 	 * @return 2016-12-28 下午05:05:23
@@ -98,13 +110,13 @@ public final class ApplicationConfig {
 		}
 		return sb.toString();
 	}
-	
-	//洗车服务
-	public final static int CLEAN_SERVICE=4100;
-	//修车服务
-	public final static int REPAIR_SERVICE=5100;
-	//保养服务
-	public final static int MAINTAIN_SERVICE=6100;
-	//轮胎服务
-	public final static int TYRE_SERVICE=7100;
+
+	// 洗车服务
+	public final static int CLEAN_SERVICE = 4100;
+	// 修车服务
+	public final static int REPAIR_SERVICE = 5100;
+	// 保养服务
+	public final static int MAINTAIN_SERVICE = 6100;
+	// 轮胎服务
+	public final static int TYRE_SERVICE = 7100;
 }

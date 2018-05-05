@@ -1,11 +1,15 @@
 package com.gtercn.carhome.dealer.cms.util;
 
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -145,5 +149,42 @@ public class CommonUtil {
 		}
 		String code = sb.toString().toUpperCase() ;
 		return code;
+	}
+	
+
+	/**
+	 * 获取后面的日期
+	 * @param days
+	 * @param format
+	 * @return
+	 * @throws 
+	 * @date 2018年4月28日 下午1:21:22
+	 */
+	public static String getDaysAfterTime(int days, SimpleDateFormat format) {
+		Calendar cal = Calendar.getInstance();
+		// 把时间设置为当前时间-hours小时
+		cal.add(Calendar.DAY_OF_MONTH, days);
+		return format.format(cal.getTime());
+	}
+	
+	/**
+	 * 提取出手机号
+	 * @param list
+	 * @return
+	 * @throws 
+	 * @date 2018年4月28日 下午1:46:21
+	 */
+	public static String matcherPhone(String telephone) {
+		if(StringUtils.isBlank(telephone))
+			return "";
+		String regExp = "^((13[0-9])|(15[^4])|(18[0,2,3,5-9])|(17[0-8])|(147))\\d{8}$";
+		Pattern pattern = Pattern.compile(regExp);
+		List<String> result = Arrays.asList(telephone.split(","));
+		for (String str : result) {
+			Matcher matcher = pattern.matcher(str);
+			if (matcher.matches())
+				return str;
+		}
+		return "";
 	}
 }

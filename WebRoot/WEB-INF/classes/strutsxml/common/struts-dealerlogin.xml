@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" 
+"http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>	
+	<package name="login" extends="globalResult">
+		<!-- 登陆 -->
+		<action name="signin_*" class="com.gtercn.carhome.dealer.cms.action.DealerLoginAction" method="{1}">
+			<result name="success" type="redirectAction">index</result>
+			<result name="input">/login.jsp</result>
+			<result name="changePwdPage">/jsp/changePassword.jsp</result>
+			<interceptor-ref name="authrity"></interceptor-ref>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+		</action>
+		
+		<action name="index" class="com.gtercn.carhome.dealer.cms.action.DealerLoginAction">
+			<result name="success">/jsp/index.jsp</result> 
+		</action>
+	</package>
+</struts>    
