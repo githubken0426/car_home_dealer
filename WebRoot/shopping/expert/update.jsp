@@ -146,7 +146,7 @@ response.flushBuffer();%>
 							<td width="15%" align="right" nowrap="nowrap" bgcolor="#f1f1f1" height="40px">达人微信号：</td>
 							<td width="30%">
 								<input type="hidden"value="${expertTop.id }" name="expertTop.id"/>
-								<input type="text"value="${expertTop.expertWechatNumber }" id="expertWechatNumber" name="expertTop.expertWechatNumber" tabindex="13" style="width:200px;margin-left:30px;"/>
+								<input type="text"value="${expertTop.expertWechatNumber }" id="expertWechatNumber" name="expertTop.expertWechatNumber" tabindex="13" style="width:190px;margin-left:30px;"/>
 								<span id="topTitleMsg" style="margin-left:15px;"></span>
 							</td>
 							<td width="15%" align="right" nowrap="nowrap" bgcolor="#f1f1f1" height="40px">达人经验(年)：</td>
@@ -170,10 +170,9 @@ response.flushBuffer();%>
 						<tr>
 							<td align="right" nowrap="nowrap" bgcolor="#f1f1f1" height="40px">达人头像：</td>
 							<td>
-								<input onchange="viewUploadImg(this,'expertViewPortrait')" type="file" name="expertPortrait" tabindex="18"  style="width:260px;margin-left:30px;"/>
+								<input onchange="viewUploadImg(this,'expertViewPortrait')" type="file" name="expertPortrait" tabindex="18"  style="width:160px;margin-left:30px;"/>
 								<input type="button" value="删除" class="btn btn-info " style="width:80px;" onclick="deletePicture('expertPortrait','expertPortraitFlag')" />
-								<input type="hidden" name="expertPortraitFlag" id="expertPortraitFlag" 
-														value="${fn:substringAfter(expertTop.expertPortraitUrl,ftpServerIp) }" />
+								<input type="hidden" name="expertPortraitFlag" id="expertPortraitFlag" value="${expertTop.expertPortraitUrl }" />
 								<c:if test="${not empty expertTop.expertPortraitUrl}">
 									<img src="${expertTop.expertPortraitUrl}"style="width:50px;height:50px;" id="expertViewPortrait"/>
 								</c:if>
