@@ -1,4 +1,4 @@
-package com.gtercn.carhome.dealer.cms.service.shopping.ordder;
+package com.gtercn.carhome.dealer.cms.service.shopping.order;
 
 import org.springframework.stereotype.Repository;
 

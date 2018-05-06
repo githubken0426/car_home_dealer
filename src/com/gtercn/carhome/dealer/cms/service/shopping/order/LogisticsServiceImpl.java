@@ -1,4 +1,4 @@
-package com.gtercn.carhome.dealer.cms.service.shopping.ordder;
+package com.gtercn.carhome.dealer.cms.service.shopping.order;
 
 import java.text.SimpleDateFormat;
 
@@ -98,7 +98,7 @@ public class LogisticsServiceImpl implements LogisticsService {
 		dao.addDetail(detail);
 
 		// 發貨成功，发送短信
-		SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日");
+		/*SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日");
 		String arriveDate = CommonUtil.getDaysAfterTime(ApplicationConfig.ARRIVE_DAY, format);
 		String serviceDate = CommonUtil.getDaysAfterTime(ApplicationConfig.SERVICE_DAY, format);
 		String orderNo = order.getOrderNo();
@@ -109,7 +109,7 @@ public class LogisticsServiceImpl implements LogisticsService {
 			AliSMSUtils.sendDelaerMsg(dealerPhone, order.getUserName(), orderNo, arriveDate);
 		} else {
 			AliSMSUtils.sendUserSelfMsg(order.getTelphone(), orderNo, arriveDate);
-		}
+		}*/
 		return 1;
 	}
 
