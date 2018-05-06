@@ -104,7 +104,7 @@ response.flushBuffer();%>
 								<input onchange="viewUploadImg(this,'userViewPortrait')" type="file" name="userPortrait" readonly="readonly" tabindex="8"  style="width:260px;margin-left:30px;"/>
 								<img 
 									<c:if test="${not empty apiUser.avatarUrl}"> 
-									 src="${ftpServerIp}${apiUser.avatarUrl}" 
+									 src="${apiUser.avatarUrl}" 
 								 	</c:if>
 								 id="userViewPortrait" style="width:50px;height:50px;"/>
 							</td>
