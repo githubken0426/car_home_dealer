@@ -3,7 +3,7 @@
 <mapper namespace="com.gtercn.carhome.dealer.cms.dao.shopping.GoodsMapper" >
   
   <sql id="Base_Column_List" >
-    id, brand_id, score, sku_code, prime_price, promotion_price, cost_price, product_area, 
+    id, brand_id, score, sku_code,service_type,prime_price, promotion_price, cost_price, product_area, 
     goods_title, goods_synopsis, goods_description,goods_detail, search_tag, stock, big_picture, small_picture, 
     sold_number, is_hot, is_new, up_time, down_time, status, city_id, update_time,weight,create_time,
     (select count(1) from inn_comment where goods_id=G.id) as commentCount,
@@ -91,7 +91,7 @@
   </select>
   
   <insert id="insert" parameterType="com.gtercn.carhome.dealer.cms.entity.shopping.Goods" >
-    insert into inn_goods (id, brand_id, score, 
+    insert into inn_goods (id, brand_id, service_type,score, 
       sku_code, prime_price, promotion_price, 
       cost_price, product_area, goods_title, 
       goods_synopsis, goods_description, search_tag, 
@@ -99,13 +99,13 @@
       is_hot, is_new, up_time, down_time, 
       status, weight,city_id, create_time, update_time
       )
-    values (#{id,jdbcType=VARCHAR}, #{brandId,jdbcType=VARCHAR}, #{score,jdbcType=VARCHAR}, 
-      #{skuCode,jdbcType=VARCHAR}, #{primePrice,jdbcType=DECIMAL}, #{promotionPrice,jdbcType=DECIMAL}, 
-      #{costPrice,jdbcType=DECIMAL}, #{productArea,jdbcType=VARCHAR}, #{goodsTitle,jdbcType=VARCHAR}, 
-      #{goodsSynopsis,jdbcType=VARCHAR}, #{goodsDescription,jdbcType=VARCHAR}, #{searchTag,jdbcType=VARCHAR}, 
-      #{stock,jdbcType=INTEGER}, #{smallPicture,jdbcType=VARCHAR},#{bigPicture,jdbcType=VARCHAR},
-      #{goodsDetail,jdbcType=VARCHAR},#{soldNumber,jdbcType=INTEGER},#{isHot,jdbcType=CHAR},
-      #{isNew,jdbcType=CHAR}, now(), #{downTime,jdbcType=TIMESTAMP},0 , 
+    values (#{id,jdbcType=VARCHAR}, #{brandId,jdbcType=VARCHAR},#{serviceType,jdbcType=VARCHAR},
+      #{score,jdbcType=VARCHAR}, #{skuCode,jdbcType=VARCHAR}, #{primePrice,jdbcType=DECIMAL}, 
+      #{promotionPrice,jdbcType=DECIMAL},#{costPrice,jdbcType=DECIMAL}, #{productArea,jdbcType=VARCHAR},
+      #{goodsTitle,jdbcType=VARCHAR},#{goodsSynopsis,jdbcType=VARCHAR}, #{goodsDescription,jdbcType=VARCHAR}, 
+      #{searchTag,jdbcType=VARCHAR},#{stock,jdbcType=INTEGER}, #{smallPicture,jdbcType=VARCHAR},
+      #{bigPicture,jdbcType=VARCHAR},#{goodsDetail,jdbcType=VARCHAR},#{soldNumber,jdbcType=INTEGER},
+      #{isHot,jdbcType=CHAR},#{isNew,jdbcType=CHAR}, now(), #{downTime,jdbcType=TIMESTAMP},0 , 
       #{weight,jdbcType=INTEGER}, #{cityId,jdbcType=CHAR}, now(),now())
   </insert>
   
@@ -114,6 +114,7 @@
 	<set>
 		brand_id=#{brandId,jdbcType=VARCHAR},
 		score=#{score,jdbcType=VARCHAR},
+		service_type=#{serviceType,jdbcType=VARCHAR},
 		prime_price=#{primePrice,jdbcType=DECIMAL},
 		promotion_price=#{promotionPrice,jdbcType=DECIMAL},
 		cost_price=#{costPrice,jdbcType=DECIMAL},

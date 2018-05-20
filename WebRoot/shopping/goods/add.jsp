@@ -95,8 +95,16 @@ function getBrandByCtegory(ele) {
 									</c:forEach>
 								</select>
 							</td>
-							<td width="10%"  align="right" nowrap="nowrap" bgcolor="#f1f1f1" height="40px"></td>
-							<td width="40%" ></td>
+							<td width="10%"  align="right" nowrap="nowrap" bgcolor="#f1f1f1" height="40px">服务类型:</td>
+							<td width="40%" >
+								<select id="serviceType" name="entity.serviceType" style="height:25px;margin-left:30px;width:200px;">
+									<!-- <option value="2000">救援</option> -->
+									<option value="5100">修理服务</option>
+									<option value="4100">洗车服务</option>
+									<option value="6100">保养服务</option>
+									<option value="7100">轮胎服务</option>
+								</select>
+							</td>
 						</tr>
 						
 						<c:forEach var="spec" items="${specList}">

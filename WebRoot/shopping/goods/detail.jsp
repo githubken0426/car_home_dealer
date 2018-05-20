@@ -47,6 +47,20 @@ response.flushBuffer();
 								<span style="margin-left:30px;">${entity.brandName}</span>
 							</td>
 							<td width="10%"  align="right" nowrap="nowrap" bgcolor="#f1f1f1" height="40px">
+								服务类型:
+							</td>
+							<td width="40%" >
+								<span style="margin-left:30px;">
+								<c:choose >
+									<c:when test="${entity.serviceType=='5100' }">修理服务</c:when>
+									<c:when test="${entity.serviceType=='4100' }">洗车服务</c:when>
+									<c:when test="${entity.serviceType=='6100' }">保养服务</c:when>
+									<c:when test="${entity.serviceType=='7100' }">轮胎服务</c:when>
+								</c:choose>
+								</span>
+							</td>
+						</tr> 
+							<%-- <td width="10%"  align="right" nowrap="nowrap" bgcolor="#f1f1f1" height="40px">
 								<c:if test="${entity.status==1 }">下架时间:</c:if>
 							</td>
 							<td width="40%" >
@@ -56,8 +70,7 @@ response.flushBuffer();
 									</span>
 								</c:if>
 							</td>
-						</tr>
-						
+						 --%>
 						<c:forEach var="spec" items="${specList}">
 						<tr>
 							<td align="right" nowrap="nowrap" bgcolor="#f1f1f1" height="40px">${spec.name}：</td>

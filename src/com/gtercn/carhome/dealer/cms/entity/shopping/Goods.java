@@ -12,6 +12,7 @@ public class Goods {
     private String brandId;
     private Integer score;
     private String skuCode;
+    private String serviceType;
     private BigDecimal primePrice;
     private BigDecimal promotionPrice;
     private BigDecimal costPrice;
@@ -290,4 +291,13 @@ public class Goods {
 	public void setWeight(double weight) {
 		this.weight = weight;
 	}
+
+	public String getServiceType() {
+		return serviceType;
+	}
+
+	public void setServiceType(String serviceType) {
+		this.serviceType = serviceType;
+	}
+	
 }

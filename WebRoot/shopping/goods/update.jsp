@@ -77,8 +77,15 @@ response.flushBuffer();
 									</c:forEach>
 								</select>
 							</td>
-							<td width="10%"  align="right" nowrap="nowrap" bgcolor="#f1f1f1" height="40px"></td>
-							<td width="40%" ></td>
+							<td width="10%"  align="right" nowrap="nowrap" bgcolor="#f1f1f1" height="40px">服务类型:</td>
+							<td width="40%" >
+								<select name="entity.serviceType" style="height:25px;margin-left:30px;width:200px;">
+									<option value="5100" <c:if test="${entity.serviceType=='5100' }">selected='selected'</c:if>>修理服务</option>
+									<option value="4100" <c:if test="${entity.serviceType=='4100' }">selected='selected'</c:if>>洗车服务</option>
+									<option value="6100" <c:if test="${entity.serviceType=='6100' }">selected='selected'</c:if>>保养服务</option>
+									<option value="7100" <c:if test="${entity.serviceType=='7100' }">selected='selected'</c:if>>轮胎服务</option>
+								</select>
+							</td>
 						</tr>
 						<c:forEach var="spec" items="${specList}">
 						<tr>
