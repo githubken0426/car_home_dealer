@@ -213,7 +213,8 @@ response.flushBuffer();
 						<td>
 							<c:choose>
 								<c:when test="${o.payChannel==A }">支付宝</c:when>
-								<c:otherwise>微信</c:otherwise>
+								<c:when test="${o.payChannel==W }">微信</c:when>
+								<c:otherwise>未支付</c:otherwise>
 							</c:choose>
 						</td>
 						<td>${o.totalAmount }</td>
