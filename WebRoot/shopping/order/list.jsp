@@ -212,9 +212,9 @@ response.flushBuffer();
 						<td><fmt:formatDate value="${o.payTime }" type="both" pattern="yyyy-MM-dd HH:mm" dateStyle="long"/></td>
 						<td>
 							<c:choose>
+								<c:when test="${empty o.payChannel }">无</c:when>
 								<c:when test="${o.payChannel==A }">支付宝</c:when>
-								<c:when test="${o.payChannel==W }">微信</c:when>
-								<c:otherwise>未支付</c:otherwise>
+								<c:otherwise>微信</c:otherwise>
 							</c:choose>
 						</td>
 						<td>${o.totalAmount }</td>
