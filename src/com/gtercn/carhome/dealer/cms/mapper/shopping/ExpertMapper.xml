@@ -85,7 +85,8 @@
 			expert_experience = #{expertExperience,jdbcType=VARCHAR},
 			motto = #{motto,jdbcType=VARCHAR},
 			expert_display_pic_list = #{expertDisplayPicList,jdbcType=VARCHAR},
-			expert_discription_detail = #{expertDiscriptionDetail,jdbcType=VARCHAR}
+			expert_discription_detail = #{expertDiscriptionDetail,jdbcType=VARCHAR},
+			delete_flag=#{deleteFlag,jdbcType=VARCHAR}
 		where id = #{id,jdbcType=VARCHAR}
 	</update>
 	<!-- 通过用户id,达人id获取达人 -->

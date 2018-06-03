@@ -211,6 +211,7 @@ response.flushBuffer();
 						<td nowrap="nowrap" width="50px"><strong>经验</strong></td>
 						<td nowrap="nowrap" width="120px"><strong>联系方式</strong></td>
 						<td nowrap="nowrap" width="220px"><strong>达人简介</strong></td>
+						<td nowrap="nowrap" width="80px"><strong>状态</strong></td>
 						<td nowrap="nowrap" width="110px"><strong>创建时间</strong></td>
 	       			</tr>
 		       		<c:forEach var="o" items="${expertlist}" varStatus="s">					
@@ -227,6 +228,12 @@ response.flushBuffer();
 						</td>
 						<td>${o.expertTelNumber }</td>
 						<td>${o.expertDiscriptionShort}</td>
+						<td>
+							<c:choose>
+								<c:when test="${o.deleteFlag ==0}">正常</c:when>
+								<c:when test="${o.deleteFlag ==1}">禁用</c:when>
+							</c:choose>
+						</td>
 						<td><fmt:formatDate value="${o.insertTime }" pattern="yyyy-MM-dd" type="BOTH" dateStyle="long" /></td>
 					</tr>					
 					</c:forEach>
