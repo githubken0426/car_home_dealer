@@ -302,13 +302,13 @@ response.flushBuffer();
 		      	<tbody>
 			        <tr align="center">
 			       	 	<td nowrap="nowrap" width="40px"><input type="checkbox" id="isSelectAll"/></td>
+			       	 	<td nowrap="nowrap" width="300px"><strong>公司名字</strong></td>
 						<td nowrap="nowrap" width="100px"><strong>救援服务</strong></td>
 						<td nowrap="nowrap" width="100px"><strong>洗车服务</strong></td>
 						<td nowrap="nowrap" width="100px"><strong>修车服务</strong></td>
 						<td nowrap="nowrap" width="100px"><strong>保养服务</strong></td>
 						<td nowrap="nowrap" width="100px"><strong>轮胎服务</strong></td>
 						<td nowrap="nowrap" width="70px"><strong>状态</strong></td>
-						<td nowrap="nowrap" width="300px"><strong>公司名字</strong></td>
 						<td nowrap="nowrap" width="100px"><strong>公司评分</strong></td>
 						<td nowrap="nowrap" width="300px"><strong>公司描述</strong></td>
 						<td nowrap="nowrap" width="120px"><strong>公司所在地经度</strong></td>
@@ -321,7 +321,7 @@ response.flushBuffer();
 		       		<c:forEach var="o" items="${ShopList}" varStatus="s">					
 					<tr align="center">
 						<td><input type="checkbox" name="id" value="${o.id}"/></td>
-						<!--  检索结果表格内容 -->
+						<td>${o.shopName }</td>
 						<td>${o.rescueService }</td>
 						<td>${o.cleanService }</td>
 						<td>${o.repairService }</td>
@@ -332,7 +332,6 @@ response.flushBuffer();
 								<c:otherwise><span style="color:gray;">禁用</span></c:otherwise>
 							</c:choose>
 						</td>
-						<td>${o.shopName }</td>
 						<td>${o.shopScore }</td>
 						<td>${o.shopDescription }</td>
 						<td>${o.longitude }</td>
