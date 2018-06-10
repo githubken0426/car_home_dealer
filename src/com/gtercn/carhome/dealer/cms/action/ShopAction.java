@@ -8,7 +8,9 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -31,9 +33,11 @@ import com.gtercn.carhome.dealer.cms.entity.City;
 import com.gtercn.carhome.dealer.cms.entity.DealerUser;
 import com.gtercn.carhome.dealer.cms.entity.Rescue;
 import com.gtercn.carhome.dealer.cms.entity.Shop;
+import com.gtercn.carhome.dealer.cms.entity.shopping.GoodsCategory;
 import com.gtercn.carhome.dealer.cms.service.city.CityService;
 import com.gtercn.carhome.dealer.cms.service.rescue.RescueService;
 import com.gtercn.carhome.dealer.cms.service.shop.ShopService;
+import com.gtercn.carhome.dealer.cms.service.shopping.category.GoodsCategoryService;
 import com.gtercn.carhome.dealer.cms.util.CommonUtil;
 import com.gtercn.carhome.dealer.cms.util.UploadFtpFileTools;
 import com.opensymphony.xwork2.Action;
@@ -48,9 +52,10 @@ public class ShopAction extends ActionSupport {
 	private RescueService rescueService;
 	@Autowired
 	private CityService cityService;
+	@Autowired
+	private GoodsCategoryService goodsCategoryService;
 
 	private Shop entity;
-
 	private File myFile;
 	// myFileContentType属性用来封装上传文件的类型
 	private String myFileContentType;
@@ -220,11 +225,9 @@ public class ShopAction extends ActionSupport {
 		Map<String, Object> session = ActionContext.getContext().getSession();
 		try {
 			String index = request.getParameter("pno");
-
 			// 接收查询参数
 			String shopName = request.getParameter("shopName");
-			if (StringUtils.isNotBlank(shopName) && index != null
-					&& index != "") {
+			if (StringUtils.isNotBlank(shopName) && index != null && index != "") {
 				shopName = new String(shopName.getBytes("iso8859-1"), "UTF-8");
 			}
 			map.put("shopName", shopName);
@@ -254,8 +257,7 @@ public class ShopAction extends ActionSupport {
 
 			String detailAddress = request.getParameter("detailAddress");
 			if (StringUtils.isNotBlank(detailAddress) && index != null) {
-				detailAddress = new String(detailAddress.getBytes("iso8859-1"),
-						"UTF-8");
+				detailAddress = new String(detailAddress.getBytes("iso8859-1"), "UTF-8");
 			}
 			map.put("detailAddress", detailAddress);
 
@@ -271,8 +273,7 @@ public class ShopAction extends ActionSupport {
 			} else {
 				currentIndex = 1;
 			}
-			int totalPages = (totalCount % pageSize == 0) ? (totalCount / pageSize)
-					: (totalCount / pageSize + 1);
+			int totalPages = (totalCount % pageSize == 0) ? (totalCount / pageSize) : (totalCount / pageSize + 1);
 			map.put("beginResult", (currentIndex - 1) * pageSize);
 			map.put("pageSize", pageSize);
 			List<Shop> list = shopService.queryAllData(map);
@@ -305,7 +306,6 @@ public class ShopAction extends ActionSupport {
 		ActionContext context = ActionContext.getContext();
 		HttpServletRequest request = ServletActionContext.getRequest();
 		Map<String, Object> session = ActionContext.getContext().getSession();
-
 		try {
 			int currentIndex = 0;// 当前页
 			String index = request.getParameter("backPageNo");// 返回，记录列表页数据
@@ -315,16 +315,13 @@ public class ShopAction extends ActionSupport {
 				currentIndex = 1;
 			}
 			context.put("currentIndex", currentIndex);
-
+			List<GoodsCategory> categoryList = goodsCategoryService.selectAllCategory();
 			DealerUser user = (DealerUser) session.get("dealer_user");
-			try {
-				City city = cityService.getDataByCityCode(user.getCityCode());
-				context.put("city", city.getCityName());
-				context.put("cityId", user.getCityCode());
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		} catch (NumberFormatException e) {
+			City city = cityService.getDataByCityCode(user.getCityCode());
+			context.put("city", city.getCityName());
+			context.put("cityId", user.getCityCode());
+			context.put("categoryList", categoryList);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return Action.ERROR;
 		}
@@ -353,35 +350,40 @@ public class ShopAction extends ActionSupport {
 			entity.setId(uuid);
 			entity.setDeleteFlag(0);
 
-			String[] savePath = { ApplicationConfig.FTP_ROOTPATH, "shop",
-					entity.getId(), "thumbnail" };
+			String[] savePath = { ApplicationConfig.FTP_ROOTPATH, "shop", entity.getId(), "thumbnail" };
 			if (myFile != null) {
 				InputStream fileis = new FileInputStream(myFile);
 				int s = myFileFileName.lastIndexOf(".");
-				myFileContentType = myFileFileName.substring(s + 1,
-						myFileFileName.length());
-				String filename = System.currentTimeMillis() + "."
-						+ myFileContentType;
+				myFileContentType = myFileFileName.substring(s + 1, myFileFileName.length());
+				String filename = System.currentTimeMillis() + "." + myFileContentType;
 				UploadFtpFileTools.uploadFile(savePath, filename, fileis);
-				entity.setShopPicUrl(File.separator
-						+ ApplicationConfig.FTP_ROOTPATH + File.separator
-						+ "shop" + File.separator + entity.getId()
-						+ File.separator + "thumbnail" + File.separator
-						+ filename);
+				entity.setShopPicUrl(File.separator + ApplicationConfig.FTP_ROOTPATH + File.separator + "shop"
+						+ File.separator + entity.getId() + File.separator + "thumbnail" + File.separator + filename);
 			}
 
 			String repairService = request.getParameter("repairService");
 			String cleanService = request.getParameter("cleanService");
 			String maintainService = request.getParameter("maintainService");
 			String tyreService = request.getParameter("tyreService");
-			String[] rescueServiceArr = request
-					.getParameterValues("rescueService");
+			String[] rescueServiceArr = request.getParameterValues("rescueService");
 			String experience = request.getParameter("experience");
-			String productDescription = request
-					.getParameter("productDescription");
+			String productDescription = request.getParameter("productDescription");
 			String shopDescription = request.getParameter("shopDescription");
 			String cityId = request.getParameter("cityId");
-
+			String []categoryIds = request.getParameterValues("categoryId");
+			if(categoryIds!=null && categoryIds.length>0) {
+				StringBuffer sb=new StringBuffer();
+				Iterator<String> it=Arrays.asList(categoryIds).iterator();
+				boolean hasNext=it.hasNext();
+				while(it.hasNext()) {
+					String categoryId=it.next();
+					sb.append(categoryId);
+					hasNext=it.hasNext();
+					if(hasNext)
+						sb.append(",");
+				}
+				entity.setCategoryId(sb.toString());
+			}
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("repairService", repairService);
 			map.put("cleanService", cleanService);
@@ -398,23 +400,17 @@ public class ShopAction extends ActionSupport {
 				entity.setCity(city.getCityName());
 				entity.setCityCode(cityId);
 			}
-
-			String[] savePath1 = { ApplicationConfig.FTP_ROOTPATH, "shop",
-					entity.getId(), "detail" };
+			String[] savePath1 = { ApplicationConfig.FTP_ROOTPATH, "shop", entity.getId(), "detail" };
 			if (displayPicUrl1 != null) {
 				file1 = new FileInputStream(displayPicUrl1);
 				int s = displayPicUrl1FileName.lastIndexOf(".");
-				String displayPicUrl1FileType = displayPicUrl1FileName
-						.substring(s + 1, displayPicUrl1FileName.length());
-				String file1name = System.currentTimeMillis() + "."
-						+ displayPicUrl1FileType;
+				String displayPicUrl1FileType = displayPicUrl1FileName.substring(s + 1,
+						displayPicUrl1FileName.length());
+				String file1name = System.currentTimeMillis() + "." + displayPicUrl1FileType;
 
 				UploadFtpFileTools.uploadFile(savePath1, file1name, file1);
-				entity.setDisplayPicUrlList(File.separator
-						+ ApplicationConfig.FTP_ROOTPATH + File.separator
-						+ "shop" + File.separator + entity.getId()
-						+ File.separator + "detail" + File.separator
-						+ file1name);
+				entity.setDisplayPicUrlList(File.separator + ApplicationConfig.FTP_ROOTPATH + File.separator + "shop"
+						+ File.separator + entity.getId() + File.separator + "detail" + File.separator + file1name);
 			}
 
 			if (displayPicUrl2 != null) {
@@ -422,26 +418,21 @@ public class ShopAction extends ActionSupport {
 				// String file2name = displayPicUrl2FileName;
 
 				int s = displayPicUrl2FileName.lastIndexOf(".");
-				String displayPicUrl2FileType = displayPicUrl2FileName
-						.substring(s + 1, displayPicUrl2FileName.length());
-				String file2name = System.currentTimeMillis() + "."
-						+ displayPicUrl2FileType;
+				String displayPicUrl2FileType = displayPicUrl2FileName.substring(s + 1,
+						displayPicUrl2FileName.length());
+				String file2name = System.currentTimeMillis() + "." + displayPicUrl2FileType;
 
 				UploadFtpFileTools.uploadFile(savePath1, file2name, file2);
 				if (entity.getDisplayPicUrlList() != null) {
 					String url = entity.getDisplayPicUrlList();
 					url = url + ",";
-					url = url + File.separator + ApplicationConfig.FTP_ROOTPATH
-							+ File.separator + "shop" + File.separator
-							+ entity.getId() + File.separator + "detail"
-							+ File.separator + file2name;
+					url = url + File.separator + ApplicationConfig.FTP_ROOTPATH + File.separator + "shop"
+							+ File.separator + entity.getId() + File.separator + "detail" + File.separator + file2name;
 					entity.setDisplayPicUrlList(url);
 				} else {
-					entity.setDisplayPicUrlList(File.separator
-							+ ApplicationConfig.FTP_ROOTPATH + File.separator
-							+ "shop" + File.separator + entity.getId()
-							+ File.separator + "detail" + File.separator
-							+ file2name);
+					entity.setDisplayPicUrlList(
+							File.separator + ApplicationConfig.FTP_ROOTPATH + File.separator + "shop" + File.separator
+									+ entity.getId() + File.separator + "detail" + File.separator + file2name);
 				}
 			}
 
@@ -449,26 +440,21 @@ public class ShopAction extends ActionSupport {
 				file3 = new FileInputStream(displayPicUrl3);
 				// String file3name = displayPicUrl3FileName;
 				int s = displayPicUrl3FileName.lastIndexOf(".");
-				String displayPicUrl3FileType = displayPicUrl3FileName
-						.substring(s + 1, displayPicUrl3FileName.length());
-				String file3name = System.currentTimeMillis() + "."
-						+ displayPicUrl3FileType;
+				String displayPicUrl3FileType = displayPicUrl3FileName.substring(s + 1,
+						displayPicUrl3FileName.length());
+				String file3name = System.currentTimeMillis() + "." + displayPicUrl3FileType;
 
 				UploadFtpFileTools.uploadFile(savePath1, file3name, file3);
 				if (entity.getDisplayPicUrlList() != null) {
 					String url = entity.getDisplayPicUrlList();
 					url = url + ",";
-					url = url + File.separator + ApplicationConfig.FTP_ROOTPATH
-							+ File.separator + "shop" + File.separator
-							+ entity.getId() + File.separator + "detail"
-							+ File.separator + file3name;
+					url = url + File.separator + ApplicationConfig.FTP_ROOTPATH + File.separator + "shop"
+							+ File.separator + entity.getId() + File.separator + "detail" + File.separator + file3name;
 					entity.setDisplayPicUrlList(url);
 				} else {
-					entity.setDisplayPicUrlList(File.separator
-							+ ApplicationConfig.FTP_ROOTPATH + File.separator
-							+ "shop" + File.separator + entity.getId()
-							+ File.separator + "detail" + File.separator
-							+ file3name);
+					entity.setDisplayPicUrlList(
+							File.separator + ApplicationConfig.FTP_ROOTPATH + File.separator + "shop" + File.separator
+									+ entity.getId() + File.separator + "detail" + File.separator + file3name);
 				}
 			}
 
@@ -476,26 +462,21 @@ public class ShopAction extends ActionSupport {
 				file4 = new FileInputStream(displayPicUrl4);
 				// String file4name = displayPicUrl4FileName;
 				int s = displayPicUrl4FileName.lastIndexOf(".");
-				String displayPicUrl4FileType = displayPicUrl4FileName
-						.substring(s + 1, displayPicUrl4FileName.length());
-				String file4name = System.currentTimeMillis() + "."
-						+ displayPicUrl4FileType;
+				String displayPicUrl4FileType = displayPicUrl4FileName.substring(s + 1,
+						displayPicUrl4FileName.length());
+				String file4name = System.currentTimeMillis() + "." + displayPicUrl4FileType;
 
 				UploadFtpFileTools.uploadFile(savePath1, file4name, file4);
 				if (entity.getDisplayPicUrlList() != null) {
 					String url = entity.getDisplayPicUrlList();
 					url = url + ",";
-					url = url + File.separator + ApplicationConfig.FTP_ROOTPATH
-							+ File.separator + "shop" + File.separator
-							+ entity.getId() + File.separator + "detail"
-							+ File.separator + file4name;
+					url = url + File.separator + ApplicationConfig.FTP_ROOTPATH + File.separator + "shop"
+							+ File.separator + entity.getId() + File.separator + "detail" + File.separator + file4name;
 					entity.setDisplayPicUrlList(url);
 				} else {
-					entity.setDisplayPicUrlList(File.separator
-							+ ApplicationConfig.FTP_ROOTPATH + File.separator
-							+ "shop" + File.separator + entity.getId()
-							+ File.separator + "detail" + File.separator
-							+ file4name);
+					entity.setDisplayPicUrlList(
+							File.separator + ApplicationConfig.FTP_ROOTPATH + File.separator + "shop" + File.separator
+									+ entity.getId() + File.separator + "detail" + File.separator + file4name);
 				}
 			}
 
@@ -504,27 +485,22 @@ public class ShopAction extends ActionSupport {
 				// String file5name = displayPicUrl5FileName;
 
 				int s = displayPicUrl5FileName.lastIndexOf(".");
-				String displayPicUrl5FileType = displayPicUrl5FileName
-						.substring(s + 1, displayPicUrl5FileName.length());
-				String file5name = System.currentTimeMillis() + "."
-						+ displayPicUrl5FileType;
+				String displayPicUrl5FileType = displayPicUrl5FileName.substring(s + 1,
+						displayPicUrl5FileName.length());
+				String file5name = System.currentTimeMillis() + "." + displayPicUrl5FileType;
 
 				UploadFtpFileTools.uploadFile(savePath1, file5name, file5);
 
 				if (entity.getDisplayPicUrlList() != null) {
 					String url = entity.getDisplayPicUrlList();
 					url = url + ",";
-					url = url + File.separator + ApplicationConfig.FTP_ROOTPATH
-							+ File.separator + "shop" + File.separator
-							+ entity.getId() + File.separator + "detail"
-							+ File.separator + file5name;
+					url = url + File.separator + ApplicationConfig.FTP_ROOTPATH + File.separator + "shop"
+							+ File.separator + entity.getId() + File.separator + "detail" + File.separator + file5name;
 					entity.setDisplayPicUrlList(url);
 				} else {
-					entity.setDisplayPicUrlList(File.separator
-							+ ApplicationConfig.FTP_ROOTPATH + File.separator
-							+ "shop" + File.separator + entity.getId()
-							+ File.separator + "detail" + File.separator
-							+ file5name);
+					entity.setDisplayPicUrlList(
+							File.separator + ApplicationConfig.FTP_ROOTPATH + File.separator + "shop" + File.separator
+									+ entity.getId() + File.separator + "detail" + File.separator + file5name);
 				}
 			}
 
@@ -539,12 +515,10 @@ public class ShopAction extends ActionSupport {
 
 			System.out.println("entity2 = " + entity.toString());
 
-			writer
-					.print("<script>alert('添加成功!');window.location.href='shop!listData.action';</script>");
+			writer.print("<script>alert('添加成功!');window.location.href='shop!listData.action';</script>");
 		} catch (Exception e) {
 			e.printStackTrace();
-			writer
-					.print("<script>alert('添加失败!');window.location.href='shop!listData.action';</script>");
+			writer.print("<script>alert('添加失败!');window.location.href='shop!listData.action';</script>");
 		} finally {
 			if (file1 != null) {
 				file1.close();
@@ -604,7 +578,6 @@ public class ShopAction extends ActionSupport {
 		HttpServletRequest request = ServletActionContext.getRequest();
 		Map<String, Object> session = ActionContext.getContext().getSession();
 		String id = request.getParameter("id");
-
 		try {
 			if (id != null) {
 				entity = shopService.getDataById(id);
@@ -628,8 +601,7 @@ public class ShopAction extends ActionSupport {
 					}
 					context.put("experience", list.get(0).getExperience());
 					context.put("rescueId", list.get(0).getId());
-					context.put("productDescription", list.get(0)
-							.getProductDescription());
+					context.put("productDescription", list.get(0).getProductDescription());
 				}
 				if (StringUtils.isNotBlank(entity.getShopPicUrl())) {
 					entity.setShopPicUrl(entity.getShopPicUrl());
@@ -655,17 +627,13 @@ public class ShopAction extends ActionSupport {
 					entity.setDisplayPicUrl5(urlArr[4]);
 				}
 				DealerUser user = (DealerUser) session.get("dealer_user");
-				try {
-					City city = cityService.getDataByCityCode(user
-							.getCityCode());
-					entity.setCity(city.getCityName());
-					context.put("cityId", user.getCityCode());
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-
+				City city = cityService.getDataByCityCode(user.getCityCode());
+				entity.setCity(city.getCityName());
+				context.put("cityId", user.getCityCode());
+				List<GoodsCategory> categoryList = goodsCategoryService.selectAllCategory();
 				context.put("entity", entity);
 				context.put("ftpServerIp", ApplicationConfig.HTTP_PROTOCOL_IP);
+				context.put("categoryList", categoryList);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -692,7 +660,6 @@ public class ShopAction extends ActionSupport {
 		InputStream file4 = null;
 		InputStream file5 = null;
 		try {
-
 			String repairService = request.getParameter("repairService");
 			String cleanService = request.getParameter("cleanService");
 			String maintainService = request.getParameter("maintainService");
@@ -711,7 +678,20 @@ public class ShopAction extends ActionSupport {
 			String picFlag4 = request.getParameter("picFlag4");
 			String picFlag5 = request.getParameter("picFlag5");
 			String cityId = request.getParameter("cityId");
-
+			String []categoryIds = request.getParameterValues("categoryId");
+			if(categoryIds!=null && categoryIds.length>0) {
+				StringBuffer sb=new StringBuffer();
+				Iterator<String> it=Arrays.asList(categoryIds).iterator();
+				boolean hasNext=it.hasNext();
+				while(it.hasNext()) {
+					String categoryId=it.next();
+					sb.append(categoryId);
+					hasNext=it.hasNext();
+					if(hasNext)
+						sb.append(",");
+				}
+				entity.setCategoryId(sb.toString());
+			}
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("repairService", repairService);
 			map.put("cleanService", cleanService);
@@ -733,17 +713,12 @@ public class ShopAction extends ActionSupport {
 				City city = cityService.getDataByCityCode(cityId);
 				entity.setCity(city.getCityName());
 			}
-			String[] savePath = { ApplicationConfig.FTP_ROOTPATH, "shop",
-					entity.getId(), "thumbnail" };
+			String[] savePath = { ApplicationConfig.FTP_ROOTPATH, "shop", entity.getId(), "thumbnail" };
 			// 公司头像图片没有改变
-			if (StringUtils.isNotBlank(picFlag)
-					&& StringUtils.isBlank(myFileFileName)) {
-
+			if (StringUtils.isNotBlank(picFlag) && StringUtils.isBlank(myFileFileName)) {
 				entity.setShopPicUrl(picFlag);
 				// 图片改变
-			} else if (StringUtils.isBlank(picFlag)
-					|| picFlag.indexOf(myFileFileName) == -1) {
-
+			} else if (StringUtils.isBlank(picFlag) || picFlag.indexOf(myFileFileName) == -1) {
 				String picturePath = shop.getShopPicUrl();
 				// 删除ftp上的图片
 				if (picturePath != null && picturePath.length() > 1) {
@@ -756,22 +731,17 @@ public class ShopAction extends ActionSupport {
 					// String filename = myFileFileName;
 
 					int s = myFileFileName.lastIndexOf(".");
-					String myFileType = myFileFileName.substring(s + 1,
-							myFileFileName.length());
-					String filename = System.currentTimeMillis() + "."
-							+ myFileType;
+					String myFileType = myFileFileName.substring(s + 1, myFileFileName.length());
+					String filename = System.currentTimeMillis() + "." + myFileType;
 
 					UploadFtpFileTools.uploadFile(savePath, filename, file);
-					entity.setShopPicUrl(File.separator
-							+ ApplicationConfig.FTP_ROOTPATH + File.separator
-							+ "shop" + File.separator + entity.getId()
-							+ File.separator + "thumbnail" + File.separator
-							+ filename);
+					entity.setShopPicUrl(
+							File.separator + ApplicationConfig.FTP_ROOTPATH + File.separator + "shop" + File.separator
+									+ entity.getId() + File.separator + "thumbnail" + File.separator + filename);
 				} else {
 					entity.setShopPicUrl("");
 				}
 			}
-
 			String url = null;
 			String[] oldDisplayPicUrlArr = null;
 
@@ -779,56 +749,37 @@ public class ShopAction extends ActionSupport {
 			if (StringUtils.isNotBlank(oldDisplayPicUrlList)) {
 				oldDisplayPicUrlArr = oldDisplayPicUrlList.split(",");
 			}
-			String[] savePath1 = { ApplicationConfig.FTP_ROOTPATH, "shop",
-					entity.getId(), "detail" };
+			String[] savePath1 = { ApplicationConfig.FTP_ROOTPATH, "shop", entity.getId(), "detail" };
 
 			// 图片没有改变
-			if (StringUtils.isNotBlank(picFlag1)
-					&& StringUtils.isBlank(displayPicUrl1FileName)) {
-
+			if (StringUtils.isNotBlank(picFlag1) && StringUtils.isBlank(displayPicUrl1FileName)) {
 				url = picFlag1;
 				entity.setDisplayPicUrlList(url);
 				// 图片改变
-			} else if (StringUtils.isBlank(picFlag1)
-					|| picFlag1.indexOf(displayPicUrl1FileName) == -1) {
-
+			} else if (StringUtils.isBlank(picFlag1) || picFlag1.indexOf(displayPicUrl1FileName) == -1) {
 				String picturePath1 = "";
-				if (oldDisplayPicUrlArr != null
-						&& oldDisplayPicUrlArr.length > 0) {
+				if (oldDisplayPicUrlArr != null && oldDisplayPicUrlArr.length > 0) {
 					picturePath1 = oldDisplayPicUrlArr[0];
 					// 删除ftp上的图片
 					UploadFtpFileTools.deleteFile(picturePath1.substring(1));
 				}
-
-				/*
-				 * if (picturePath1.length() > 1) {
-				 * 
-				 * }
-				 */
 				if (StringUtils.isNotBlank(displayPicUrl1FileName)) {
 					// 上传ftp新的图片
 					file1 = new FileInputStream(displayPicUrl1);
 					// String file1name = displayPicUrl1FileName;
-
 					int s = displayPicUrl1FileName.lastIndexOf(".");
-					String displayPicUrl1FileType = displayPicUrl1FileName
-							.substring(s + 1, displayPicUrl1FileName.length());
-					String file1name = System.currentTimeMillis() + "."
-							+ displayPicUrl1FileType;
+					String displayPicUrl1FileType = displayPicUrl1FileName.substring(s + 1,
+							displayPicUrl1FileName.length());
+					String file1name = System.currentTimeMillis() + "." + displayPicUrl1FileType;
 
 					UploadFtpFileTools.uploadFile(savePath1, file1name, file1);
-					entity.setDisplayPicUrlList(File.separator
-							+ ApplicationConfig.FTP_ROOTPATH + File.separator
-							+ "shop" + File.separator + entity.getId()
-							+ File.separator + "detail" + File.separator
-							+ file1name);
+					entity.setDisplayPicUrlList(
+							File.separator + ApplicationConfig.FTP_ROOTPATH + File.separator + "shop" + File.separator
+									+ entity.getId() + File.separator + "detail" + File.separator + file1name);
 				}
 			}
-
 			// 图片2没有改变
-			if (StringUtils.isNotBlank(picFlag2)
-					&& StringUtils.isBlank(displayPicUrl2FileName)) {
-
+			if (StringUtils.isNotBlank(picFlag2) && StringUtils.isBlank(displayPicUrl2FileName)) {
 				if (url != null) {
 					url = url + ",";
 					url += picFlag2;
@@ -836,57 +787,40 @@ public class ShopAction extends ActionSupport {
 					url = picFlag2;
 				}
 				entity.setDisplayPicUrlList(url);
-			} else if (StringUtils.isBlank(picFlag2)
-					|| picFlag2.indexOf(displayPicUrl2FileName) == -1) {
+			} else if (StringUtils.isBlank(picFlag2) || picFlag2.indexOf(displayPicUrl2FileName) == -1) {
 
 				String picturePath2 = "";
-				if (oldDisplayPicUrlArr != null
-						&& oldDisplayPicUrlArr.length > 1) {
+				if (oldDisplayPicUrlArr != null && oldDisplayPicUrlArr.length > 1) {
 					picturePath2 = oldDisplayPicUrlArr[1];
 					// 删除ftp上的图片
 					UploadFtpFileTools.deleteFile(picturePath2.substring(1));
 				}
-
-				/*
-				 * if (picturePath2.length() > 1) {
-				 * 
-				 * }
-				 */
-
 				if (StringUtils.isNotBlank(displayPicUrl2FileName)) {
 					file2 = new FileInputStream(displayPicUrl2);
 					// String file2name = displayPicUrl2FileName;
 
 					int s = displayPicUrl2FileName.lastIndexOf(".");
-					String displayPicUrl2FileType = displayPicUrl2FileName
-							.substring(s + 1, displayPicUrl2FileName.length());
-					String file2name = System.currentTimeMillis() + "."
-							+ displayPicUrl2FileType;
+					String displayPicUrl2FileType = displayPicUrl2FileName.substring(s + 1,
+							displayPicUrl2FileName.length());
+					String file2name = System.currentTimeMillis() + "." + displayPicUrl2FileType;
 
 					UploadFtpFileTools.uploadFile(savePath1, file2name, file2);
 					if (entity.getDisplayPicUrlList() != null) {
 						url = entity.getDisplayPicUrlList();
 						url = url + ",";
-						url = url + File.separator
-								+ ApplicationConfig.FTP_ROOTPATH
-								+ File.separator + "shop" + File.separator
-								+ entity.getId() + File.separator + "detail"
-								+ File.separator + file2name;
+						url = url + File.separator + ApplicationConfig.FTP_ROOTPATH + File.separator + "shop"
+								+ File.separator + entity.getId() + File.separator + "detail" + File.separator
+								+ file2name;
 						entity.setDisplayPicUrlList(url);
 					} else {
-						entity.setDisplayPicUrlList(File.separator
-								+ ApplicationConfig.FTP_ROOTPATH
-								+ File.separator + "shop" + File.separator
-								+ entity.getId() + File.separator + "detail"
-								+ File.separator + file2name);
+						entity.setDisplayPicUrlList(File.separator + ApplicationConfig.FTP_ROOTPATH + File.separator
+								+ "shop" + File.separator + entity.getId() + File.separator + "detail" + File.separator
+								+ file2name);
 					}
 				}
 			}
-
 			// 图片3没有改变
-			if (StringUtils.isNotBlank(picFlag3)
-					&& StringUtils.isBlank(displayPicUrl3FileName)) {
-
+			if (StringUtils.isNotBlank(picFlag3) && StringUtils.isBlank(displayPicUrl3FileName)) {
 				if (url != null) {
 					url = url + ",";
 					url += picFlag3;
@@ -894,57 +828,40 @@ public class ShopAction extends ActionSupport {
 					url = picFlag3;
 				}
 				entity.setDisplayPicUrlList(url);
-			} else if (StringUtils.isBlank(picFlag3)
-					|| picFlag3.indexOf(displayPicUrl3FileName) == -1) {
+			} else if (StringUtils.isBlank(picFlag3) || picFlag3.indexOf(displayPicUrl3FileName) == -1) {
 
 				String picturePath3 = "";
-				if (oldDisplayPicUrlArr != null
-						&& oldDisplayPicUrlArr.length > 2) {
+				if (oldDisplayPicUrlArr != null && oldDisplayPicUrlArr.length > 2) {
 					picturePath3 = oldDisplayPicUrlArr[2];
 					// 删除ftp上的图片
 					UploadFtpFileTools.deleteFile(picturePath3.substring(1));
 				}
-
-				/*
-				 * if (picturePath3.length() > 1) {
-				 * 
-				 * }
-				 */
-
 				if (StringUtils.isNotBlank(displayPicUrl3FileName)) {
 					file3 = new FileInputStream(displayPicUrl3);
 					// String file3name = displayPicUrl3FileName;
-
 					int s = displayPicUrl3FileName.lastIndexOf(".");
-					String displayPicUrl3FileType = displayPicUrl3FileName
-							.substring(s + 1, displayPicUrl3FileName.length());
-					String file3name = System.currentTimeMillis() + "."
-							+ displayPicUrl3FileType;
+					String displayPicUrl3FileType = displayPicUrl3FileName.substring(s + 1,
+							displayPicUrl3FileName.length());
+					String file3name = System.currentTimeMillis() + "." + displayPicUrl3FileType;
 
 					UploadFtpFileTools.uploadFile(savePath1, file3name, file3);
 					if (entity.getDisplayPicUrlList() != null) {
 						url = entity.getDisplayPicUrlList();
 						url = url + ",";
-						url = url + File.separator
-								+ ApplicationConfig.FTP_ROOTPATH
-								+ File.separator + "shop" + File.separator
-								+ entity.getId() + File.separator + "detail"
-								+ File.separator + file3name;
+						url = url + File.separator + ApplicationConfig.FTP_ROOTPATH + File.separator + "shop"
+								+ File.separator + entity.getId() + File.separator + "detail" + File.separator
+								+ file3name;
 						entity.setDisplayPicUrlList(url);
 					} else {
-						entity.setDisplayPicUrlList(File.separator
-								+ ApplicationConfig.FTP_ROOTPATH
-								+ File.separator + "shop" + File.separator
-								+ entity.getId() + File.separator + "detail"
-								+ File.separator + file3name);
+						entity.setDisplayPicUrlList(File.separator + ApplicationConfig.FTP_ROOTPATH + File.separator
+								+ "shop" + File.separator + entity.getId() + File.separator + "detail" + File.separator
+								+ file3name);
 					}
 				}
 			}
 
 			// 图片4没有改变
-			if (StringUtils.isNotBlank(picFlag4)
-					&& StringUtils.isBlank(displayPicUrl4FileName)) {
-
+			if (StringUtils.isNotBlank(picFlag4) && StringUtils.isBlank(displayPicUrl4FileName)) {
 				if (url != null) {
 					url = url + ",";
 					url += picFlag4;
@@ -952,57 +869,40 @@ public class ShopAction extends ActionSupport {
 					url = picFlag4;
 				}
 				entity.setDisplayPicUrlList(url);
-			} else if (StringUtils.isBlank(picFlag4)
-					|| picFlag4.indexOf(displayPicUrl4FileName) == -1) {
+			} else if (StringUtils.isBlank(picFlag4) || picFlag4.indexOf(displayPicUrl4FileName) == -1) {
 
 				String picturePath4 = "";
-				if (oldDisplayPicUrlArr != null
-						&& oldDisplayPicUrlArr.length > 3) {
+				if (oldDisplayPicUrlArr != null && oldDisplayPicUrlArr.length > 3) {
 					picturePath4 = oldDisplayPicUrlArr[3];
 					// 删除ftp上的图片
 					UploadFtpFileTools.deleteFile(picturePath4.substring(1));
 				}
-
-				/*
-				 * if (picturePath4.length() > 1) {
-				 * 
-				 * }
-				 */
-
 				if (StringUtils.isNotBlank(displayPicUrl4FileName)) {
 					file4 = new FileInputStream(displayPicUrl4);
 					// String file4name = displayPicUrl4FileName;
 
 					int s = displayPicUrl4FileName.lastIndexOf(".");
-					String displayPicUrl4FileType = displayPicUrl4FileName
-							.substring(s + 1, displayPicUrl4FileName.length());
-					String file4name = System.currentTimeMillis() + "."
-							+ displayPicUrl4FileType;
+					String displayPicUrl4FileType = displayPicUrl4FileName.substring(s + 1,
+							displayPicUrl4FileName.length());
+					String file4name = System.currentTimeMillis() + "." + displayPicUrl4FileType;
 
 					UploadFtpFileTools.uploadFile(savePath1, file4name, file4);
 					if (entity.getDisplayPicUrlList() != null) {
 						url = entity.getDisplayPicUrlList();
 						url = url + ",";
-						url = url + File.separator
-								+ ApplicationConfig.FTP_ROOTPATH
-								+ File.separator + "shop" + File.separator
-								+ entity.getId() + File.separator + "detail"
-								+ File.separator + file4name;
+						url = url + File.separator + ApplicationConfig.FTP_ROOTPATH + File.separator + "shop"
+								+ File.separator + entity.getId() + File.separator + "detail" + File.separator
+								+ file4name;
 						entity.setDisplayPicUrlList(url);
 					} else {
-						entity.setDisplayPicUrlList(File.separator
-								+ ApplicationConfig.FTP_ROOTPATH
-								+ File.separator + "shop" + File.separator
-								+ entity.getId() + File.separator + "detail"
-								+ File.separator + file4name);
+						entity.setDisplayPicUrlList(File.separator + ApplicationConfig.FTP_ROOTPATH + File.separator
+								+ "shop" + File.separator + entity.getId() + File.separator + "detail" + File.separator
+								+ file4name);
 					}
 				}
 			}
-
 			// 图片5没有改变
-			if (StringUtils.isNotBlank(picFlag5)
-					&& StringUtils.isBlank(displayPicUrl5FileName)) {
-
+			if (StringUtils.isNotBlank(picFlag5) && StringUtils.isBlank(displayPicUrl5FileName)) {
 				if (url != null) {
 					url = url + ",";
 					url += picFlag5;
@@ -1010,12 +910,10 @@ public class ShopAction extends ActionSupport {
 					url = picFlag5;
 				}
 				entity.setDisplayPicUrlList(url);
-			} else if (StringUtils.isBlank(picFlag5)
-					|| picFlag5.indexOf(displayPicUrl5FileName) == -1) {
+			} else if (StringUtils.isBlank(picFlag5) || picFlag5.indexOf(displayPicUrl5FileName) == -1) {
 
 				String picturePath5 = "";
-				if (oldDisplayPicUrlArr != null
-						&& oldDisplayPicUrlArr.length > 4) {
+				if (oldDisplayPicUrlArr != null && oldDisplayPicUrlArr.length > 4) {
 					picturePath5 = oldDisplayPicUrlArr[4];
 					// 删除ftp上的图片
 					UploadFtpFileTools.deleteFile(picturePath5.substring(1));
@@ -1031,27 +929,22 @@ public class ShopAction extends ActionSupport {
 					file5 = new FileInputStream(displayPicUrl5);
 					// String file5name = displayPicUrl5FileName;
 					int s = displayPicUrl5FileName.lastIndexOf(".");
-					String displayPicUrl5FileType = displayPicUrl5FileName
-							.substring(s + 1, displayPicUrl5FileName.length());
-					String file5name = System.currentTimeMillis() + "."
-							+ displayPicUrl5FileType;
+					String displayPicUrl5FileType = displayPicUrl5FileName.substring(s + 1,
+							displayPicUrl5FileName.length());
+					String file5name = System.currentTimeMillis() + "." + displayPicUrl5FileType;
 
 					UploadFtpFileTools.uploadFile(savePath1, file5name, file5);
 					if (entity.getDisplayPicUrlList() != null) {
 						url = entity.getDisplayPicUrlList();
 						url = url + ",";
-						url = url + File.separator
-								+ ApplicationConfig.FTP_ROOTPATH
-								+ File.separator + "shop" + File.separator
-								+ entity.getId() + File.separator + "detail"
-								+ File.separator + file5name;
+						url = url + File.separator + ApplicationConfig.FTP_ROOTPATH + File.separator + "shop"
+								+ File.separator + entity.getId() + File.separator + "detail" + File.separator
+								+ file5name;
 						entity.setDisplayPicUrlList(url);
 					} else {
-						entity.setDisplayPicUrlList(File.separator
-								+ ApplicationConfig.FTP_ROOTPATH
-								+ File.separator + "shop" + File.separator
-								+ entity.getId() + File.separator + "detail"
-								+ File.separator + file5name);
+						entity.setDisplayPicUrlList(File.separator + ApplicationConfig.FTP_ROOTPATH + File.separator
+								+ "shop" + File.separator + entity.getId() + File.separator + "detail" + File.separator
+								+ file5name);
 					}
 				}
 			}
@@ -1103,8 +996,7 @@ public class ShopAction extends ActionSupport {
 			String fileName = "店铺信息.xls";
 			fileName = new String(fileName.getBytes("GBK"), "iso-8859-1");
 			response.reset();
-			response.setHeader("Content-Disposition", "attachment;filename="
-					+ fileName);
+			response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
 			response.setContentType("application/vnd.ms-excel");
 			response.setHeader("Pragma", "no-cache");
 			response.setHeader("Cache-Control", "no-cache");
@@ -1166,68 +1058,57 @@ public class ShopAction extends ActionSupport {
 							DecimalFormat df = new DecimalFormat("######0");
 							// 救援
 							Cell cell = row.getCell(0);
-							if (cell == null
-									|| cell.getCellType() == Cell.CELL_TYPE_BLANK) {
+							if (cell == null || cell.getCellType() == Cell.CELL_TYPE_BLANK) {
 								out.write("08");
 								errFlag = true;
 								break;
 							} else {
-								shop.setRescueService(String.valueOf(df
-										.format(cell.getNumericCellValue())));
+								shop.setRescueService(String.valueOf(df.format(cell.getNumericCellValue())));
 							}
 
 							// 修车
 							Cell cell1 = row.getCell(1);
-							if (cell1 == null
-									|| cell1.getCellType() == Cell.CELL_TYPE_BLANK) {
+							if (cell1 == null || cell1.getCellType() == Cell.CELL_TYPE_BLANK) {
 								out.write("09");
 								errFlag = true;
 								break;
 							} else {
-								shop.setRepairService(String.valueOf(df
-										.format(cell1.getNumericCellValue())));
+								shop.setRepairService(String.valueOf(df.format(cell1.getNumericCellValue())));
 							}
 
 							// 洗车
 							Cell cell2 = row.getCell(2);
-							if (cell2 == null
-									|| cell2.getCellType() == Cell.CELL_TYPE_BLANK) {
+							if (cell2 == null || cell2.getCellType() == Cell.CELL_TYPE_BLANK) {
 								out.write("10");
 								errFlag = true;
 								break;
 							} else {
-								shop.setCleanService(String.valueOf(df
-										.format(cell2.getNumericCellValue())));
+								shop.setCleanService(String.valueOf(df.format(cell2.getNumericCellValue())));
 							}
 
 							// 保养
 							Cell cell3 = row.getCell(3);
-							if (cell3 == null
-									|| cell3.getCellType() == Cell.CELL_TYPE_BLANK) {
+							if (cell3 == null || cell3.getCellType() == Cell.CELL_TYPE_BLANK) {
 								out.write("11");
 								errFlag = true;
 								break;
 							} else {
-								shop.setMaintainService(String.valueOf(df
-										.format(cell3.getNumericCellValue())));
+								shop.setMaintainService(String.valueOf(df.format(cell3.getNumericCellValue())));
 							}
 
 							// 轮胎
 							Cell cell4 = row.getCell(4);
-							if (cell4 == null
-									|| cell4.getCellType() == Cell.CELL_TYPE_BLANK) {
+							if (cell4 == null || cell4.getCellType() == Cell.CELL_TYPE_BLANK) {
 								out.write("12");
 								errFlag = true;
 								break;
 							} else {
-								shop.setTyreService(String.valueOf(df
-										.format(cell4.getNumericCellValue())));
+								shop.setTyreService(String.valueOf(df.format(cell4.getNumericCellValue())));
 							}
 
 							// 公司名称
 							Cell cell5 = row.getCell(5);
-							if (cell5 == null
-									|| cell5.getCellType() == Cell.CELL_TYPE_BLANK) {
+							if (cell5 == null || cell5.getCellType() == Cell.CELL_TYPE_BLANK) {
 								out.write("13");
 								errFlag = true;
 								break;
@@ -1237,52 +1118,43 @@ public class ShopAction extends ActionSupport {
 
 							// 公司评分
 							Cell cell6 = row.getCell(6);
-							if (cell6 == null
-									|| cell6.getCellType() == Cell.CELL_TYPE_BLANK) {
+							if (cell6 == null || cell6.getCellType() == Cell.CELL_TYPE_BLANK) {
 								out.write("14");
 								errFlag = true;
 								break;
 							} else {
-								shop.setShopScore(String.valueOf(df
-										.format(cell6.getNumericCellValue())));
+								shop.setShopScore(String.valueOf(df.format(cell6.getNumericCellValue())));
 							}
 
 							// 公司描述(可以为空)
 							Cell cell7 = row.getCell(7);
-							if (cell7 != null
-									&& cell7.getCellType() != Cell.CELL_TYPE_BLANK) {
-								shop.setShopDescription(cell7
-										.getStringCellValue());
+							if (cell7 != null && cell7.getCellType() != Cell.CELL_TYPE_BLANK) {
+								shop.setShopDescription(cell7.getStringCellValue());
 							}
 
 							// 经度
 							Cell cell8 = row.getCell(8);
-							if (cell8 == null
-									|| cell8.getCellType() == Cell.CELL_TYPE_BLANK) {
+							if (cell8 == null || cell8.getCellType() == Cell.CELL_TYPE_BLANK) {
 								out.write("15");
 								errFlag = true;
 								break;
 							} else {
-								shop.setLongitude(String.valueOf(cell8
-										.getNumericCellValue()));
+								shop.setLongitude(String.valueOf(cell8.getNumericCellValue()));
 							}
 
 							// 纬度
 							Cell cell9 = row.getCell(9);
-							if (cell9 == null
-									|| cell9.getCellType() == Cell.CELL_TYPE_BLANK) {
+							if (cell9 == null || cell9.getCellType() == Cell.CELL_TYPE_BLANK) {
 								out.write("16");
 								errFlag = true;
 								break;
 							} else {
-								shop.setLatitude(String.valueOf(cell9
-										.getNumericCellValue()));
+								shop.setLatitude(String.valueOf(cell9.getNumericCellValue()));
 							}
 
 							// 省
 							Cell cell10 = row.getCell(10);
-							if (cell10 == null
-									|| cell10.getCellType() == Cell.CELL_TYPE_BLANK) {
+							if (cell10 == null || cell10.getCellType() == Cell.CELL_TYPE_BLANK) {
 								out.write("17");
 								errFlag = true;
 								break;
@@ -1292,8 +1164,7 @@ public class ShopAction extends ActionSupport {
 
 							// 市
 							Cell cell11 = row.getCell(11);
-							if (cell11 == null
-									|| cell11.getCellType() == Cell.CELL_TYPE_BLANK) {
+							if (cell11 == null || cell11.getCellType() == Cell.CELL_TYPE_BLANK) {
 								out.write("18");
 								errFlag = true;
 								break;
@@ -1303,20 +1174,17 @@ public class ShopAction extends ActionSupport {
 
 							// 详细地址
 							Cell cell12 = row.getCell(12);
-							if (cell12 == null
-									|| cell12.getCellType() == Cell.CELL_TYPE_BLANK) {
+							if (cell12 == null || cell12.getCellType() == Cell.CELL_TYPE_BLANK) {
 								out.write("20");
 								errFlag = true;
 								break;
 							} else {
-								shop.setDetailAddress(cell12
-										.getStringCellValue());
+								shop.setDetailAddress(cell12.getStringCellValue());
 							}
 
 							// 电话
 							Cell cell13 = row.getCell(13);
-							if (cell13 == null
-									|| cell13.getCellType() == Cell.CELL_TYPE_BLANK) {
+							if (cell13 == null || cell13.getCellType() == Cell.CELL_TYPE_BLANK) {
 								out.write("21");
 								errFlag = true;
 								break;
@@ -1326,8 +1194,7 @@ public class ShopAction extends ActionSupport {
 
 							// 救援类型
 							Cell cell14 = row.getCell(14);
-							if (cell14 == null
-									|| cell14.getCellType() == Cell.CELL_TYPE_BLANK) {
+							if (cell14 == null || cell14.getCellType() == Cell.CELL_TYPE_BLANK) {
 								out.write("22");
 								errFlag = true;
 								break;
@@ -1348,25 +1215,20 @@ public class ShopAction extends ActionSupport {
 
 							// 救援描述
 							Cell cell15 = row.getCell(15);
-							if (cell15 != null
-									&& cell15.getCellType() != Cell.CELL_TYPE_BLANK) {
-								shop.setProductDescription(cell15
-										.getStringCellValue());
+							if (cell15 != null && cell15.getCellType() != Cell.CELL_TYPE_BLANK) {
+								shop.setProductDescription(cell15.getStringCellValue());
 							}
 
 							// 城市编号查找
 							for (City city : cityList) {
-								if (StringUtils.equals(shop.getCity(), city
-										.getCityName())) {
+								if (StringUtils.equals(shop.getCity(), city.getCityName())) {
 									shop.setCityCode(city.getCityCode());
 									break;
 								}
 							}
-
 							list1.add(shop);
 							shop = new Shop();
 						}
-
 						if (!errFlag) {
 							shopService.addImport(list1);
 						}

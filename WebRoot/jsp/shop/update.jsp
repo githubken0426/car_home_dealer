@@ -22,11 +22,7 @@ response.flushBuffer();
 	<script type="text/javascript" src="<%=path%>/js/cms/view_image/view_image.js"></script>
    	
 <script type="text/javascript">
-
-	
-
 	// 定义js check变量  
-
 	var rescueServiceIsOK = true;
 	var repairServiceIsOK = true;
 	var cleanServiceIsOK = true;
@@ -47,9 +43,7 @@ response.flushBuffer();
 	var isTopIsOK = true;
 	var displayPriorityIsOK = true;
 
-	
 	$(function(){		
-		
 		var rescueService1 = $("#rescueService1").val();
 		var rescueService2 = $("#rescueService2").val();
 		var rescueService3 = $("#rescueService3").val();
@@ -572,43 +566,40 @@ response.flushBuffer();
 					<span class="now_location">当前位置:</span>修改
 				    <div class="clear"></div>
 			    </div>
-				    
 			    <div style="margin:0 auto; margin:10px;">
-			   		<table  class="margin-bottom-20 table  no-border" style="width:300px;margin-top:20px;">
-					 	<tr>
-							<td class="text-center">
-								<input type="button" value="保存" class="btn btn-info " style="width:80px;" onclick="updateSubmit()" />
-							</td>
-							<td align="left">
-								<input type="button" value="返回" class="btn btn-info " style="width:80px;"  onclick="turnBack()"/>
-						   	</td>
-					   		<td></td>
-					   	</tr>
-					</table>
-			    
 	            	<table class="table table-bordered" >
-	            		<input type="hidden" id="id" name="entity.id" value="${entity.id }" />
-	            		<input type="hidden" id="rescueId" name="rescueId" value="${rescueId }" />
-	            		
-
 						<!-- 数据修改  -->
 						<tr>
 							<td width="10%" align="right" nowrap="nowrap" bgcolor="#f1f1f1" height="40px">救援服务：</td>
 							<td width="40%">
-							<input type="checkbox" style="margin-left:30px;" name="rescueService1" id="rescueService1" value="${rescueService1}" onblur="upperCase1()" tabindex="1"/><span>现场抢修</span>
-							<input type="checkbox" style="margin-left:10px;" name="rescueService2" id="rescueService2" value="${rescueService2}" onblur="upperCase2()" tabindex="2"/><span>拖车</span>
-							<input type="checkbox" style="margin-left:10px;" name="rescueService3" id="rescueService3" value="${rescueService3}" onblur="upperCase3()" tabindex="3"/><span>紧急加水</span>
-							<input type="checkbox" style="margin-left:10px;" name="rescueService4" id="rescueService4" value="${rescueService4}" onblur="upperCase4()" tabindex="4"/><span>紧急送油</span>
-							<input type="checkbox" style="margin-left:10px;" name="rescueService5" id="rescueService5" value="${rescueService5}" onblur="upperCase5()" tabindex="5"/><span>配钥匙</span>
-							<span id="rescueServiceMsg" style="margin-left:15px;"></span>
+								<input type="hidden" id="id" name="entity.id" value="${entity.id }" />
+		            			<input type="hidden" id="rescueId" name="rescueId" value="${rescueId }" />
+								<input type="checkbox" style="margin-left:30px;" name="rescueService1" id="rescueService1" value="${rescueService1}" onblur="upperCase1()" tabindex="1"/><span>现场抢修</span>
+								<input type="checkbox" style="margin-left:10px;" name="rescueService2" id="rescueService2" value="${rescueService2}" onblur="upperCase2()" tabindex="2"/><span>拖车</span>
+								<input type="checkbox" style="margin-left:10px;" name="rescueService3" id="rescueService3" value="${rescueService3}" onblur="upperCase3()" tabindex="3"/><span>紧急加水</span>
+								<input type="checkbox" style="margin-left:10px;" name="rescueService4" id="rescueService4" value="${rescueService4}" onblur="upperCase4()" tabindex="4"/><span>紧急送油</span>
+								<input type="checkbox" style="margin-left:10px;" name="rescueService5" id="rescueService5" value="${rescueService5}" onblur="upperCase5()" tabindex="5"/><span>配钥匙</span>
+								<span id="rescueServiceMsg" style="margin-left:15px;"></span>
 							</td>
 							<td width="10%" align="right" nowrap="nowrap" bgcolor="#f1f1f1" height="40px">服务：</td>
 							<td width="40%">
-							<input type="checkbox" style="margin-left:30px;" name="repairService" id="repairService" onblur="upperCaseRepair()" value="${entity.repairService}" tabindex="6"/><span>修车服务</span>
-							<input type="checkbox" style="margin-left:30px;" name="cleanService" id="cleanService" onblur="upperCaseClean()" value="${entity.cleanService}" tabindex="7"/><span>洗车服务</span>
-							<input type="checkbox" style="margin-left:30px;" name="maintainService" id="maintainService" onblur="upperCaseMain()" value="${entity.maintainService}" tabindex="8"/><span>保养服务</span>
-							<input type="checkbox" style="margin-left:30px;" name="tyreService" id="tyreService" onblur="upperCaseTyre()" value="${entity.tyreService}" tabindex="9"/><span>轮胎服务</span>
-							<span id="repairServiceMsg" style="margin-left:15px;"></span>
+								<input type="checkbox" style="margin-left:30px;" name="repairService" id="repairService" onblur="upperCaseRepair()" value="${entity.repairService}" tabindex="6"/><span>修车服务</span>
+								<input type="checkbox" style="margin-left:30px;" name="cleanService" id="cleanService" onblur="upperCaseClean()" value="${entity.cleanService}" tabindex="7"/><span>洗车服务</span>
+								<input type="checkbox" style="margin-left:30px;" name="maintainService" id="maintainService" onblur="upperCaseMain()" value="${entity.maintainService}" tabindex="8"/><span>保养服务</span>
+								<input type="checkbox" style="margin-left:30px;" name="tyreService" id="tyreService" onblur="upperCaseTyre()" value="${entity.tyreService}" tabindex="9"/><span>轮胎服务</span>
+								<span id="repairServiceMsg" style="margin-left:15px;"></span>
+							</td>
+						</tr>
+						<tr>
+							<td width="10%" align="right" nowrap="nowrap" bgcolor="#f1f1f1" height="40px">支持商品分类：</td>
+							<td colspan="3">
+								<c:forEach var="category" items="${categoryList }">
+				   	 				<label style="margin-left:30px;">
+				   	 					<input type="checkbox" name="categoryId" value="${category.id}"
+				   	 						<c:if test='${fn:contains(entity.categoryList,category.id)}'>checked='checked' </c:if>/>
+				   	 					${category.title}
+				   	 				</label>
+				   	 			</c:forEach>
 							</td>
 						</tr>
 						<tr>
@@ -832,8 +823,19 @@ response.flushBuffer();
 		              	</tr>
 						-->
 	            	</table>
-	            	
-	         	</div>	         	
+	         	</div>	 
+	         	<table  class="margin-bottom-20 table  no-border" style="width:100%;margin-top:20px;">
+					<tr>
+					 	<td width="20%"></td>
+						<td width="30%" class="text-center">
+							<input type="button" value="保存" class="btn btn-info " style="width:80px;" onclick="updateSubmit()" />
+						</td>
+						<td width="30%" align="left">
+							<input type="button" value="返回" class="btn btn-info " style="width:80px;"  onclick="turnBack()"/>
+						</td>
+					   	<td  width="20%"></td>
+					  </tr>
+				</table>        	
 			</div>
 		</form>
 

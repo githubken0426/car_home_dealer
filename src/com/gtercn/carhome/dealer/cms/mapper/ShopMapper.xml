@@ -3,6 +3,7 @@
 <mapper namespace="com.gtercn.carhome.dealer.cms.dao.ShopMapper" >
   <resultMap id="BaseResultMap" type="com.gtercn.carhome.dealer.cms.entity.Shop" >
     <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="category_id" property="categoryId" jdbcType="VARCHAR" />
     <result column="rescue_service" property="rescueService" jdbcType="INTEGER" />
     <result column="repair_service" property="repairService" jdbcType="INTEGER" />
     <result column="clean_service" property="cleanService" jdbcType="INTEGER" />
@@ -28,23 +29,23 @@
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, rescue_service, repair_service, clean_service, maintain_service, tyre_service, 
+    id,category_id, rescue_service, repair_service, clean_service, maintain_service, tyre_service, 
     shop_pic_url, shop_name, shop_score, shop_description, longitude, latitude, province, 
     city, district, detail_address, tel_number_list, display_pic_url_list, is_top, display_priority, city_code,
-    delete_flag, insert_time, update_time
+    delete_flag, insert_time, update_time,(select title from inn_goods_category where category_id=id) categoryName
   </sql>
+  
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select 
-    <include refid="Base_Column_List" />
-    from tc_shop
-    where id = #{id,jdbcType=VARCHAR}
+    select  <include refid="Base_Column_List" /> from tc_shop where id = #{id,jdbcType=VARCHAR}
   </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from tc_shop
     where id = #{id,jdbcType=VARCHAR}
   </delete>
+  
   <insert id="insert" parameterType="com.gtercn.carhome.dealer.cms.entity.Shop" >
-    insert into tc_shop (id, rescue_service, repair_service, 
+    insert into tc_shop (id, category_id,rescue_service, repair_service, 
       clean_service, maintain_service, tyre_service, 
       shop_pic_url, shop_name, shop_score, 
       shop_description, longitude, latitude, 
@@ -52,7 +53,7 @@
       detail_address, tel_number_list, display_pic_url_list, 
       is_top, display_priority, city_code, delete_flag, 
       insert_time, update_time, product_description)
-    values (#{id,jdbcType=VARCHAR}, #{rescueService,jdbcType=INTEGER}, #{repairService,jdbcType=INTEGER}, 
+    values (#{id,jdbcType=VARCHAR},#{categoryId,jdbcType=VARCHAR}, #{rescueService,jdbcType=INTEGER}, #{repairService,jdbcType=INTEGER}, 
       #{cleanService,jdbcType=INTEGER}, #{maintainService,jdbcType=INTEGER}, #{tyreService,jdbcType=INTEGER}, 
       #{shopPicUrl,jdbcType=VARCHAR}, #{shopName,jdbcType=VARCHAR}, #{shopScore,jdbcType=VARCHAR}, 
       #{shopDescription,jdbcType=VARCHAR}, #{longitude,jdbcType=VARCHAR}, #{latitude,jdbcType=VARCHAR}, 
@@ -209,6 +210,9 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.gtercn.carhome.dealer.cms.entity.Shop" >
     update tc_shop
     <set >
+      <if test="categoryId != null" >
+        category_id = #{categoryId,jdbcType=VARCHAR},
+      </if>
       <if test="rescueService != null" >
         rescue_service = #{rescueService,jdbcType=INTEGER},
       </if>
@@ -286,7 +290,9 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.gtercn.carhome.dealer.cms.entity.Shop" >
     update tc_shop
-    set rescue_service = #{rescueService,jdbcType=INTEGER},
+    set 
+      category_id = #{categoryId,jdbcType=VARCHAR},
+      rescue_service = #{rescueService,jdbcType=INTEGER},
       repair_service = #{repairService,jdbcType=INTEGER},
       clean_service = #{cleanService,jdbcType=INTEGER},
       maintain_service = #{maintainService,jdbcType=INTEGER},
@@ -313,9 +319,7 @@
   
   <!-- 查询所有信息 -->
 	<select id="queryAllData" resultMap="BaseResultMap" parameterType="java.util.Map">
-		select 
-		<include refid="Base_Column_List" />
-		from tc_shop
+		select <include refid="Base_Column_List" /> from tc_shop
 		<where>
 		    city_code = #{cityCode}
 		    <if test="deleteFlag !=null and deleteFlag !=''">
@@ -355,7 +359,7 @@
 				and tel_number_list LIKE '%${telNumber}%'
 			</if>
 		</where> 
-		order by delete_flag asc, update_time desc limit #{beginResult},#{pageSize}
+		order by delete_flag asc, insert_time desc limit #{beginResult},#{pageSize}
 	</select>
 	<!-- 查询所有数据数 -->
 	<select id="getTotalCount" resultType="java.lang.Integer" parameterType="java.util.Map">
@@ -408,9 +412,7 @@
 	</select>
 	
 	<select id="selectAllInfo" resultMap="BaseResultMap" parameterType="java.lang.String" >
-	    select 
-	    <include refid="Base_Column_List" />
-	    from tc_shop
+	    select <include refid="Base_Column_List" /> from tc_shop
   	</select>
   	
   <!-- 根据店铺名查询 -->

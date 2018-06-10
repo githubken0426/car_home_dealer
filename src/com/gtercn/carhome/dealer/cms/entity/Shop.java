@@ -1,6 +1,10 @@
 package com.gtercn.carhome.dealer.cms.entity;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
 
 public class Shop {
     private String id;
@@ -36,6 +40,9 @@ public class Shop {
     private String experience;
     private String productDescription;
     private String cityCode;
+    private String categoryId;
+    private List<String> categoryList;
+    private String categoryName;
     
     public String getId() {
         return id;
@@ -45,7 +52,32 @@ public class Shop {
         this.id = id == null ? null : id.trim();
     }
 
-    public String getRescueService() {
+    public String getCategoryId() {
+		return categoryId;
+	}
+
+	public void setCategoryId(String categoryId) {
+		this.categoryId = categoryId == null ? "" : categoryId.trim();
+		this.categoryList= StringUtils.isNotBlank(categoryId) ? Arrays.asList(categoryId.split(",")):null;
+	}
+	
+	public List<String> getCategoryList() {
+		return categoryList;
+	}
+
+	public void setCategoryList(List<String> categoryList) {
+		this.categoryList = categoryList;
+	}
+
+	public String getCategoryName() {
+		return categoryName;
+	}
+
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
+	}
+
+	public String getRescueService() {
         return rescueService;
     }
 

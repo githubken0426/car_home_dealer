@@ -193,11 +193,7 @@ response.flushBuffer();
 			        <div class="clear"></div>
 			    </div>
 			    <div class=" margin-bottom-5 mt10">
-			    
-			    	
-
 					<!--  条件检索区 -->
-
 					<span style="font-size: 15px;margin-left:32px;">
 						公司名字
 						<input type="text" id="shopName" name="shopName" value="${shopName}"class="laydate-icon" style="width:160px;padding:5px;" />
@@ -228,33 +224,9 @@ response.flushBuffer();
 						   </c:choose>
 				   		</select>
 					</span>
-					
-
-					<%-- <span class="margin-left-10" style="font-size: 15px;">
-						详细地址_省
-						<input type="text" id="province" name="province" value="${province}"class="laydate-icon" style="width:150px;padding:5px;" />
-					</span> --%>
-					
-					<!-- <span class=" margin-left-10" style="font-size: 15px;float:left;">文件导入:&nbsp;</span>
-					<span style="float:left;"> -->
-					<!-- <span class="margin-left-10" style="font-size: 15px;">
-						文件导入
-						<input name="uploadFile" id="uploadFile" type="file"/>
-						<input type="submit" onclick="changeCheck()" value="上&nbsp;&nbsp;传" class="btn btn-info" style="width:90px;padding:0px 4px;margin-right:8px;" />
-					</span> -->
 					<!-- 清楚浮动 -->
 			   	 	<div style="clear:both"></div>
 			   		</br>
-					<%-- <span class="margin-left-10" style="font-size: 15px;">
-						详细地址_市
-						<input type="text" id="city" name="city" value="${city}"class="laydate-icon" style="width:150px;padding:5px;" />
-					</span> --%>
-
-					<%-- <span class="margin-left-10" style="font-size: 15px;">
-						详细地址_区
-						<input type="text" id="district" name="district" value="${district}"class="laydate-icon" style="width:160px;padding:5px;" />
-					</span> --%>
-
 					<span style="font-size: 15px;margin-left:28px;">
 						服务类型
 						<select class="margin-left-5" id="type" name="type" style="height:25px;">
@@ -330,13 +302,6 @@ response.flushBuffer();
 		      	<tbody>
 			        <tr align="center">
 			       	 	<td nowrap="nowrap" width="40px"><input type="checkbox" id="isSelectAll"/></td>
-			       	 	<!-- 
-						<td nowrap="nowrap" width="220px"><strong>id</strong></td>
-						-->
-						
-
-						<!--  检索结果表格题头 -->
-
 						<td nowrap="nowrap" width="100px"><strong>救援服务</strong></td>
 						<td nowrap="nowrap" width="100px"><strong>洗车服务</strong></td>
 						<td nowrap="nowrap" width="100px"><strong>修车服务</strong></td>
@@ -352,19 +317,11 @@ response.flushBuffer();
 						<td nowrap="nowrap" width="100px"><strong>详细地址_市</strong></td>
 						<td nowrap="nowrap" width="300px"><strong>详细地址</strong></td>
 						<td nowrap="nowrap" width="300px"><strong>公司电话列表</strong></td>
-						<!-- <td nowrap="nowrap" width="220px"><strong>公司详情图片</strong></td> -->
-<!-- 						<td nowrap="nowrap" width="220px"><strong>是否置顶</strong></td>
-						<td nowrap="nowrap" width="220px"><strong>显示优先级</strong></td> -->
-
 	       			</tr>
-		       		
 		       		<c:forEach var="o" items="${ShopList}" varStatus="s">					
 					<tr align="center">
 						<td><input type="checkbox" name="id" value="${o.id}"/></td>
-						
-
 						<!--  检索结果表格内容 -->
-
 						<td>${o.rescueService }</td>
 						<td>${o.cleanService }</td>
 						<td>${o.repairService }</td>
