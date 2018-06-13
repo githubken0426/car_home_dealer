@@ -59,7 +59,7 @@ jQuery(function() {
 		formData: { "picType": 3 },
 		disableGlobalDnd : true,
 		chunked : true,
-		fileNumLimit : 300,
+		fileNumLimit : 5,
 		fileSizeLimit : 5 * 1024 * 1024, // 200 M
 		fileSingleSizeLimit : 1 * 1024 * 1024
 	// 50 M
