@@ -212,7 +212,13 @@ public class OrderAction extends ActionSupport {
 		PrintWriter writer = response.getWriter();
 		try {
 			String addressId = request.getParameter("addressId");
-			logisticsService.delivery(logistics, addressId);
+			int result=logisticsService.delivery(logistics, addressId);
+			String info="";
+			if(result==-1)
+				info="用户地址不正确！";
+			if(result==-2)
+				info="店铺地址不正确！";
+			writer.print("<script>alert('发货失败!"+info+"');window.location.href='order_list.action';</script>");
 		} catch (Exception e) {
 			e.printStackTrace();
 			writer.print("<script>alert('发货失败!');window.location.href='order_list.action';</script>");
