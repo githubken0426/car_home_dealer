@@ -378,6 +378,12 @@ response.flushBuffer();
   		$("#backForm").submit();
   	}
     
+    function matcher(ele){
+    	var reg = /^([1-5])$/;
+    	if(!reg.test(ele.value)){
+    	 	$("#shopScoreMsg").html("星级必须是1到5！");
+    	}
+    }
   </script>
   </head>
   
@@ -438,9 +444,8 @@ response.flushBuffer();
 							</td>
 							<td width="10%" align="right" nowrap="nowrap" bgcolor="#f1f1f1" height="40px">公司星级：</td>
 							<td width="40%">
-								<input type="text" id="shopScore" name="entity.shopScore" tabindex="12" style="width:200px;margin-left:30px;"/>
+								<input type="text" onblur="matcher(this)" id="shopScore" name="entity.shopScore" tabindex="12" style="width:200px;margin-left:30px;"/>
 								<span id="shopScoreMsg" style="margin-left:15px;"></span>
-								<span>注意：请填写1～5的整数</span>
 							</td>
 						</tr>
 						<tr>
