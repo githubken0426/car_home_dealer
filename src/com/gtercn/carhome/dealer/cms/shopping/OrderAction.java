@@ -241,7 +241,6 @@ public class OrderAction extends ActionSupport {
 		try {
 			SimpleDateFormat format=new  SimpleDateFormat("yyyy-MM-dd");
 			String telphone=request.getParameter("sendTelphone");
-			telphone="18642690085";
 			String shopName=request.getParameter("sendShopName");
 			String date=CommonUtil.getDaysAfterTime(ApplicationConfig.SERVICE_DAY, format);
 			String orderNo=request.getParameter("sendOrderNo");
