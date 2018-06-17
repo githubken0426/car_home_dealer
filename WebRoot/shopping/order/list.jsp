@@ -176,8 +176,8 @@ response.flushBuffer();
 			       	 	<td nowrap="nowrap" width="5%"><input type="checkbox" id="isSelectAll"/></td>
 						<!--  检索结果表格题头 -->
 						<td nowrap="nowrap" width="13%"><strong>订单号</strong></td>
-						<td nowrap="nowrap" width="10%"><strong>购买用户</strong></td>
-						<td nowrap="nowrap" width="10%"><strong>助销达人</strong></td>
+						<td nowrap="nowrap" width="8%"><strong>购买用户</strong></td>
+						<td nowrap="nowrap" width="8%"><strong>助销达人</strong></td>
 						<td nowrap="nowrap" width="5%"><strong>订单状态</strong></td>
 						<td nowrap="nowrap" width="10%"><strong>下单时间</strong></td>
 						<td nowrap="nowrap" width="10%"><strong>付款时间</strong></td>
@@ -185,7 +185,7 @@ response.flushBuffer();
 						<td nowrap="nowrap" width="6%"><strong>总金额</strong></td>
 						<td nowrap="nowrap" width="6%"><strong>实付金额</strong></td>
 						<td nowrap="nowrap" width="12%"><strong>物流单号</strong></td>
-						<td nowrap="nowrap" width="8%"><strong>操 作</strong></td>
+						<td nowrap="nowrap" width="12%"><strong>操 作</strong></td>
 	       			</tr>
 		       		<c:forEach var="o" items="${list}" varStatus="s">					
 					<tr align="center">
@@ -232,6 +232,9 @@ response.flushBuffer();
 										<a href="javascript:void(0);" onclick="shipping('${o.id}','${o.shopId}','${o.address}')">发 货</a>
 									</c:otherwise>
 								</c:choose>
+							</c:if>
+							<c:if test="${o.flag==1 and o.orderStatus==4}">
+								<a href="javascript:void(0);" onclick="sendMessage('${o.orderNo}','${o.telphone}','${o.shopName}')">短信提醒</a>
 							</c:if>
 						</td>
 					</tr>					
@@ -293,6 +296,23 @@ response.flushBuffer();
 	</table>
 </div>
 </form>
+<!-- 发短信 -->
+<form id="sendMSGForm" action="${pageContext.request.contextPath}/order_sendMsg" method="post">
+	<div style="display: none">
+	<table class="table table-condensed" style="margin-bottom:0px;">
+	    <tr>
+	    	<td width="15%" align="center" nowrap="nowrap" bgcolor="#f1f1f1" height="40px"></td>
+			<td width="35%" >
+				<input type="hidden" id="sendOrderNo" name="sendOrderNo" />
+				<input type="hidden" id="sendTelphone" name="sendTelphone" />
+				<input type="hidden" id="sendShopName" name="sendShopName" />
+			</td>
+			<td width="15%" align="center" nowrap="nowrap" bgcolor="#f1f1f1" height="40px"></td>
+		</tr>
+	</table>
+</div>
+</form>
+
 <!-- 物流详情 -->
 <div id="logisticsDetail" style="display: none">
 	<table class="table table-condensed" style="margin-bottom:0px;"></table>
@@ -328,6 +348,14 @@ function shipping(orderId,addressId,address){
 	});
 }
 
+function sendMessage(orderNo,telphone,shopName){
+	$("#sendOrderNo").val(orderNo);
+	$("#sendTelphone").val(telphone);
+	$("#sendShopName").val(shopName);
+	if(confirm("确定向手机号:"+telphone+"发送短信吗？")){
+		$("#sendMSGForm").submit();
+	}
+}
 //物流详情
 function logisticsDetail(orderId,address){
 	var $tobdy=$("#logisticsDetail table");

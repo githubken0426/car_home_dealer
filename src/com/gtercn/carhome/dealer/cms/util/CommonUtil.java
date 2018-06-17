@@ -153,7 +153,7 @@ public class CommonUtil {
 	
 
 	/**
-	 * 获取后面的日期
+	 * 按照当前日期追加天数
 	 * @param days
 	 * @param format
 	 * @return
@@ -162,11 +162,9 @@ public class CommonUtil {
 	 */
 	public static String getDaysAfterTime(int days, SimpleDateFormat format) {
 		Calendar cal = Calendar.getInstance();
-		// 把时间设置为当前时间-hours小时
 		cal.add(Calendar.DAY_OF_MONTH, days);
 		return format.format(cal.getTime());
 	}
-	
 	/**
 	 * 提取出手机号
 	 * @param list

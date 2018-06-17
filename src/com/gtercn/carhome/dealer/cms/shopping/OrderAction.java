@@ -1,6 +1,7 @@
 package com.gtercn.carhome.dealer.cms.shopping;
 
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -25,6 +26,8 @@ import com.gtercn.carhome.dealer.cms.service.city.CityService;
 import com.gtercn.carhome.dealer.cms.service.shopping.order.LogisticsService;
 import com.gtercn.carhome.dealer.cms.service.shopping.order.OrderService;
 import com.gtercn.carhome.dealer.cms.service.shopping.spec.SpecService;
+import com.gtercn.carhome.dealer.cms.util.AliSMSUtils;
+import com.gtercn.carhome.dealer.cms.util.CommonUtil;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
@@ -224,5 +227,29 @@ public class OrderAction extends ActionSupport {
 			writer.print("<script>alert('发货失败!');window.location.href='order_list.action';</script>");
 		}
 		writer.print("<script>alert('发货成功!');window.location.href='order_list.action';</script>");
+	}
+	/**
+	 * 发送短信
+	 * @throws Exception
+	 */
+	public void sendMsg() throws Exception {
+		ServletResponse response = ServletActionContext.getResponse();
+		HttpServletRequest request = ServletActionContext.getRequest();
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("text/html; charset=utf-8");
+		PrintWriter writer = response.getWriter();
+		try {
+			SimpleDateFormat format=new  SimpleDateFormat("yyyy-MM-dd");
+			String telphone=request.getParameter("sendTelphone");
+			telphone="18642690085";
+			String shopName=request.getParameter("sendShopName");
+			String date=CommonUtil.getDaysAfterTime(ApplicationConfig.SERVICE_DAY, format);
+			String orderNo=request.getParameter("sendOrderNo");
+			AliSMSUtils.sendDealerShippedMsg(telphone, orderNo, date, shopName);
+		} catch (Exception e) {
+			e.printStackTrace();
+			writer.print("<script>alert('发送失败!');window.location.href='order_list.action';</script>");
+		}
+		writer.print("<script>alert('发送成功！');window.location.href='order_list.action';</script>");
 	}
 }
