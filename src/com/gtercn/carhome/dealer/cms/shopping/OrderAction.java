@@ -216,12 +216,10 @@ public class OrderAction extends ActionSupport {
 		try {
 			String addressId = request.getParameter("addressId");
 			int result=logisticsService.delivery(logistics, addressId);
-			String info="";
 			if(result==-1)
-				info="用户地址不正确！";
+				writer.print("<script>alert('发货失败!用户地址不正确!');window.location.href='order_list.action';</script>");
 			if(result==-2)
-				info="店铺地址不正确！";
-			writer.print("<script>alert('发货失败!"+info+"');window.location.href='order_list.action';</script>");
+				writer.print("<script>alert('发货失败!店铺地址不正确!');window.location.href='order_list.action';</script>");
 		} catch (Exception e) {
 			e.printStackTrace();
 			writer.print("<script>alert('发货失败!');window.location.href='order_list.action';</script>");

@@ -11,8 +11,8 @@
     <result column="logistics_no" property="logisticsNo" jdbcType="VARCHAR" />
     <result column="logistics_type" property="logisticsType" jdbcType="INTEGER" />
     <result column="logistics_name" property="logisticsName" jdbcType="VARCHAR"/>
-    <result column="logistics_fee" property="logisticsFee" jdbcType="VARCHAR" />
-    <result column="delivery_amount" property="deliveryAmount" jdbcType="VARCHAR" />
+    <result column="logistics_fee" property="logisticsFee" jdbcType="DOUBLE" />
+    <result column="delivery_amount" property="deliveryAmount" jdbcType="DOUBLE" />
     <result column="logistics_status" property="logisticsStatus" jdbcType="INTEGER"/>
     <result column="settlement_status" property="settlementStatus" jdbcType="INTEGER"/>
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
@@ -49,7 +49,7 @@
   		#{id,jdbcType=VARCHAR},#{orderId,jdbcType=VARCHAR},#{realname,jdbcType=VARCHAR},
   		#{telphone,jdbcType=VARCHAR},#{address,jdbcType=VARCHAR},#{postalCode,jdbcType=VARCHAR},
   		#{logisticsNo,jdbcType=VARCHAR},0,#{logisticsName,jdbcType=VARCHAR},
-  		#{logisticsFee,jdbcType=VARCHAR},#{deliveryAmount,jdbcType=VARCHAR},
+  		#{logisticsFee,jdbcType=DOUBLE},#{deliveryAmount,jdbcType=DOUBLE},
   		0,0,now()
   	)
   </insert>

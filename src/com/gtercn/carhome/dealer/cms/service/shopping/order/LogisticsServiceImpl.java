@@ -18,7 +18,7 @@ import com.gtercn.carhome.dealer.cms.util.CommonUtil;
 @Service(value = "logisticsService")
 public class LogisticsServiceImpl implements LogisticsService {
 	@Autowired
-	private LogisticsMapper dao;
+	private LogisticsMapper logisticsDao;
 	@Autowired
 	private OrderMapper orderDao;
 	@Autowired
@@ -26,12 +26,12 @@ public class LogisticsServiceImpl implements LogisticsService {
 
 	@Override
 	public Logistics selectLogisticsByOrder(String orderId) {
-		return dao.selectLogisticsByOrder(orderId);
+		return logisticsDao.selectLogisticsByOrder(orderId);
 	}
 
 	@Override
 	public Logistics selectByPrimaryKey(String id) {
-		return dao.selectByPrimaryKey(id);
+		return logisticsDao.selectByPrimaryKey(id);
 	}
 
 	@Override
@@ -40,8 +40,12 @@ public class LogisticsServiceImpl implements LogisticsService {
 		Order order = orderDao.selectByPrimaryKey(orderId);
 		if (order == null)
 			return 0;
+		if(logistics.getLogisticsFee()==null)
+			logistics.setLogisticsFee(0.0);
+		if(logistics.getDeliveryAmount()==null)
+			logistics.setDeliveryAmount(0.0);
 		if (order.getFlag() == 0) {
-			Address address = dao.selectAddressByPrimaryKey(addressId);
+			Address address = logisticsDao.selectAddressByPrimaryKey(addressId);
 			if (address == null) 
 				return -1;
 			StringBuffer sb = new StringBuffer();
@@ -82,19 +86,20 @@ public class LogisticsServiceImpl implements LogisticsService {
 				sb.append(del);
 			logistics.setAddress(sb.toString());
 		}
-		// 更新订单
+		
+		// 插入物流信息
 		String logisticsId = CommonUtil.getUID();
 		logistics.setId(logisticsId);
-		orderDao.updateOrderLogistics(orderId, logisticsId);
-		// 插入物流信息
-		dao.add(logistics);
+		logisticsDao.add(logistics);
+		// 插入物流像详情
 		LogisticsDetail detail = new LogisticsDetail();
 		detail.setId(CommonUtil.getUID());
 		detail.setLogisticsId(logisticsId);
 		detail.setDescription(ApplicationConfig.LOGISTICS_INFO);
-		dao.addDetail(detail);
-
-		// 發貨成功，发送短信
+		logisticsDao.addDetail(detail);
+		// 更新订单
+		orderDao.updateOrderLogistics(orderId, logisticsId);
+		// 成功，发送短信
 		/*SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日");
 		String arriveDate = CommonUtil.getDaysAfterTime(ApplicationConfig.ARRIVE_DAY, format);
 		String serviceDate = CommonUtil.getDaysAfterTime(ApplicationConfig.SERVICE_DAY, format);

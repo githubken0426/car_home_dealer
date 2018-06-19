@@ -1,6 +1,5 @@
 package com.gtercn.carhome.dealer.cms.entity.shopping;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -14,8 +13,8 @@ public class Logistics {
 	private String logisticsNo;
 	private Integer logisticsType;
 	private String logisticsName;
-	private BigDecimal logisticsFee;
-	private BigDecimal deliveryAmount;
+	private Double logisticsFee;
+	private Double deliveryAmount;
 	private Integer logisticsStatus;
 	private Integer settlementStatus;
 	private Date createTime;
@@ -70,16 +69,16 @@ public class Logistics {
 	public void setLogisticsType(Integer logisticsType) {
 		this.logisticsType = logisticsType;
 	}
-	public BigDecimal getLogisticsFee() {
+	public Double getLogisticsFee() {
 		return logisticsFee;
 	}
-	public void setLogisticsFee(BigDecimal logisticsFee) {
+	public void setLogisticsFee(Double logisticsFee) {
 		this.logisticsFee = logisticsFee;
 	}
-	public BigDecimal getDeliveryAmount() {
+	public Double getDeliveryAmount() {
 		return deliveryAmount;
 	}
-	public void setDeliveryAmount(BigDecimal deliveryAmount) {
+	public void setDeliveryAmount(Double deliveryAmount) {
 		this.deliveryAmount = deliveryAmount;
 	}
 	public Integer getLogisticsStatus() {
