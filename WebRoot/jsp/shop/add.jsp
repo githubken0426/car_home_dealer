@@ -381,7 +381,11 @@ response.flushBuffer();
     function matcher(ele){
     	var reg = /^([1-5])$/;
     	if(!reg.test(ele.value)){
+    		$("#shopScore").val("");
+    		$("#shopScore").focus();
     	 	$("#shopScoreMsg").html("星级必须是1到5！");
+    	}else{
+    		$("#shopScoreMsg").html("");
     	}
     }
   </script>
