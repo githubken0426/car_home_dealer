@@ -264,7 +264,7 @@ response.flushBuffer();
 	    <tr>
 	    	<td width="15%" align="center" nowrap="nowrap" bgcolor="#f1f1f1" height="40px">物流名称</td>
 			<td width="35%" >
-				<input name="logistics.logisticsName" placeholder='请输入物流名称' 
+				<input id="logisticsName" name="logistics.logisticsName" placeholder='请输入物流名称' 
 					type="text" style="width:150px;"/>
 					<input type="hidden" id="orderId" name="logistics.orderId" />
 					<input type="hidden" id="addressId" name="addressId" />
@@ -278,12 +278,12 @@ response.flushBuffer();
 		<tr>
 	    	<td align="center" nowrap="nowrap" bgcolor="#f1f1f1" height="40px">订单运费</td>
 			<td>
-				<input name="logistics.logisticsFee" placeholder='客户订单运费' 
+				<input id="logisticsFee" name="logistics.logisticsFee" placeholder='客户订单运费' 
 					type="text" style="width:150px;"/>
 			</td>
 			<td align="center" nowrap="nowrap" bgcolor="#f1f1f1" height="40px">实际运费</td>
 			<td>
-				<input id="logisticsNo" name="logistics.deliveryAmount" placeholder='支付给物流公司的费用' 
+				<input id="deliveryAmount" name="logistics.deliveryAmount" placeholder='支付给物流公司的费用' 
 					type="text" style="width:150px;"/>
 			</td>
 		</tr>
@@ -342,6 +342,22 @@ function shipping(orderId,addressId,address){
 		closeBtn: 1,
 		content : $("#shipping"),
 		yes: function(index, layero){
+			if($("#logisticsName").val()){
+				layer.tips('请输入物流名称！', '#logisticsName');
+				return;
+			}
+			if($("#logisticsNo").val()){
+				layer.tips('请输入物流单号！', '#logisticsNo');
+				return;
+			}
+			if($("#logisticsFee").val()){
+				layer.tips('请输客户订单运费！', '#logisticsNo');
+				return;
+			}
+			if($("#deliveryAmount").val()){
+				layer.tips('请输入物流公司运费！', '#deliveryAmount');
+				return;
+			}
 			$("#shipForm").submit();
 			layer.close(index);
 		}
