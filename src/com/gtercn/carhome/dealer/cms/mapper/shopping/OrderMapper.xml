@@ -43,9 +43,7 @@
 	
 	<!-- 查询所有 -->
 	<select id="queryAllData" resultType="com.gtercn.carhome.dealer.cms.entity.shopping.Order" parameterType="java.util.Map">
-		select O.*,
-		(select real_name from tc_user L where L.user_id=O.user_id )as userName ,
-		(select login_phone from tc_user L where L.user_id=O.user_id )as telphone ,
+		select O.*,(select login_phone from tc_user L where L.user_id=O.user_id )as telphone ,
 		(select expert_name from tb_expert_top L where L.id=O.expert_id )as expertName,
 		(select logistics_no from inn_logistics L where L.id=O.logistics_id )as logisticsNo,
 		(select shop_name from tc_shop S where S.id=O.shop_id) shopName,
