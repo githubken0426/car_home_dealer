@@ -426,4 +426,32 @@ public class GoodsAction extends ActionSupport {
 		}
 		return null;
 	}
+	
+	/**
+	 * 查询商品分类
+	 * @return
+	 * @throws 
+	 * @date 2018年6月23日 上午11:32:59
+	 */
+	public String getBrandByCtegory(){
+		PrintWriter writer = null;
+		try {
+			ServletResponse response = ServletActionContext.getResponse();
+			ServletRequest request = ServletActionContext.getRequest();
+			response.setCharacterEncoding("utf-8");
+			response.setContentType("text/html; charset=utf-8");
+			writer = response.getWriter();
+			String categoryId = request.getParameter("categoryId");
+			List<GoodsBrand> brandList=goodsBrandService.queryDataByCategory(categoryId);
+			JSONArray array=JSONArray.fromObject(brandList);
+			writer.print(array);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Action.ERROR;
+		} finally {
+			writer.flush();
+			writer.close();
+		}
+		return null;
+	}
 }

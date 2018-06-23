@@ -39,7 +39,8 @@ response.flushBuffer();
 		title=encodeURI(encodeURI(title));
 		var beginTime = $.trim($("#beginTime").val());
 		var endTime = $.trim($("#endTime").val());
-		
+		var categoryId = $("#categoryId").val();
+		var brandId = $("#brandId").val();
   		var totalPage = ${totalPages};
   		var totalRecords = ${totalCount};
   		var pageNo = getParameter('pno');
@@ -59,117 +60,123 @@ response.flushBuffer();
   			hrefFormer : '${pageContext.request.contextPath}/goods_list',//链接前部
   			hrefLatter : '.action',		 //链接尾部
   			getLink : function(n){
-  				return this.hrefFormer + this.hrefLatter + "?pno="+ n +"&title="+title+"&beginTime="+beginTime +"&endTime="+endTime;
-  			},
-  			lang : {
-  				prePageText : '上一页',
-  				nextPageText : '下一页',
-  				totalPageBeforeText : '共',
-  				totalPageAfterText : '页',
-  				totalRecordsAfterText : '条数据',
-  				gopageBeforeText : '转到',
-  				gopageButtonOkText : '确定',
-  				gopageAfterText : '页',
-  				buttonTipBeforeText : '第',
-  				buttonTipAfterText : '页'
-  			}
-  		});
-  		//生成
-  		kkpager.generPageHtml();
-  		//全选全不选
-  		$("#isSelectAll").bind({
-  			click:function(){
-  				var checkboxs=$("input:checkbox[name=id]");
-  				if($("#isSelectAll").is(":checked")){
-  					for(var i=0;i<checkboxs.length;i++){
-  					  if(!(checkboxs[i].checked)){
-						  	checkboxs[i].checked=true;
+				return this.hrefFormer + this.hrefLatter + "?pno=" + n
+						+ "&title=" + title + "&beginTime=" + beginTime
+						+ "&endTime=" + endTime + "&categoryId=" + categoryId
+						+ "&brandId=" + brandId;
+			},
+			lang : {
+				prePageText : '上一页',
+				nextPageText : '下一页',
+				totalPageBeforeText : '共',
+				totalPageAfterText : '页',
+				totalRecordsAfterText : '条数据',
+				gopageBeforeText : '转到',
+				gopageButtonOkText : '确定',
+				gopageAfterText : '页',
+				buttonTipBeforeText : '第',
+				buttonTipAfterText : '页'
+			}
+		});
+		//生成
+		kkpager.generPageHtml();
+		//全选全不选
+		$("#isSelectAll").bind({
+			click : function() {
+				var checkboxs = $("input:checkbox[name=id]");
+				if ($("#isSelectAll").is(":checked")) {
+					for (var i = 0; i < checkboxs.length; i++) {
+						if (!(checkboxs[i].checked)) {
+							checkboxs[i].checked = true;
 						}
-  					}
-  				}else{
-  					for(var i=0;i<checkboxs.length;i++){
-  					  if((checkboxs[i].checked)){
-						  	checkboxs[i].checked=false;
+					}
+				} else {
+					for (var i = 0; i < checkboxs.length; i++) {
+						if ((checkboxs[i].checked)) {
+							checkboxs[i].checked = false;
 						}
-  					}
-  				}
-  			}
-  		});
-  	});
+					}
+				}
+			}
+		});
+	});
 
 	//按条件查询
-  	function query(){
-  		$("#totalForm").attr("action","${pageContext.request.contextPath}/goods_list.action");
-	  	$("#totalForm").submit();
-  	}
-  	//重置
-  	function clean(){
-  		$("#categoryId").attr("value","-1");
-		$("#brandId").attr("value","-1");
-		$("#title").attr("value","");
-		$("#beginTime").attr("value","");
-		$("#endTime").attr("value","");
-  	}
-  	//修改
-  	function updateDataPage(){
-  		var checkboxs=$("input:checkbox[name=id]");
-  		var ret = 0;  // 选中的记录数
-  		var idx = 0;  // 被选中的数据索引号
-  		for(var i=0; i<checkboxs.length; i++){ 
-  			if(checkboxs[i].checked) {
-  				ret = ret + 1;
-  				idx = i;
-  			}
- 		} 
-  		if (ret == 0) {
-  			alert("请选择修改数据！");
-  			return;
-  		} else if (ret > 1) {
-  			alert("请只选择一条数据！");
-  			return;
-  		} else if (ret == 1) {
-			$("#id").val(checkboxs[idx].value);			 
-			$("#totalForm").attr("action","${pageContext.request.contextPath}/goods_updateDataPage.action");
-			$("#totalForm").submit();	
-  		}
-  	}
-  	
-  	//批量删除
-  	function deleteBatch(){
-  		var checkboxs=$("input:checkbox[name=id]");
-  		if(checkboxs.is(":checked")){
-  			if(confirm("下架商品后,商品将无法销售!确定下架选中商品吗?")){
-  				$("#totalForm").attr("action","${pageContext.request.contextPath}/goods_deleteBatch.action");
-  		  		$("#totalForm").submit();
-  			}
-  		}else{
-  			alert("请选择要下架选中的商品！");
-  		}
-  	}
- 
+	function query() {
+		$("#totalForm").attr("action",
+				"${pageContext.request.contextPath}/goods_list.action");
+		$("#totalForm").submit();
+	}
+	//重置
+	function clean() {
+		$("#categoryId").attr("value", "-1");
+		$("#brandId").attr("value", "-1");
+		$("#title").attr("value", "");
+		$("#beginTime").attr("value", "");
+		$("#endTime").attr("value", "");
+	}
+	//修改
+	function updateDataPage() {
+		var checkboxs = $("input:checkbox[name=id]");
+		var ret = 0; // 选中的记录数
+		var idx = 0; // 被选中的数据索引号
+		for (var i = 0; i < checkboxs.length; i++) {
+			if (checkboxs[i].checked) {
+				ret = ret + 1;
+				idx = i;
+			}
+		}
+		if (ret == 0) {
+			alert("请选择修改数据！");
+			return;
+		} else if (ret > 1) {
+			alert("请只选择一条数据！");
+			return;
+		} else if (ret == 1) {
+			$("#id").val(checkboxs[idx].value);
+			$("#totalForm")
+					.attr("action",
+							"${pageContext.request.contextPath}/goods_updateDataPage.action");
+			$("#totalForm").submit();
+		}
+	}
+
+	//批量删除
+	function deleteBatch() {
+		var checkboxs = $("input:checkbox[name=id]");
+		if (checkboxs.is(":checked")) {
+			if (confirm("下架商品后,商品将无法销售!确定下架选中商品吗?")) {
+				$("#totalForm")
+						.attr("action",
+								"${pageContext.request.contextPath}/goods_deleteBatch.action");
+				$("#totalForm").submit();
+			}
+		} else {
+			alert("请选择要下架选中的商品！");
+		}
+	}
+
 	function getBrandByCtegory(ele) {
 		$("#brandId").empty();
-		var optA="<option value='-1'>请选择品牌</option>";
-		 $("#brandId").append(optA);
-		if (ele.value!=-1) {
+		var optA = "<option value='-1'>请选择品牌</option>";
+		$("#brandId").append(optA);
+		if (ele.value != -1) {
 			$.ajax({
 				type : "POST",
 				dataType : "json",
-				data : {
-					categoryId : ele.value
-				},
+				data : {categoryId : ele.value},
 				async : true,
-				url : "${pageContext.request.contextPath}/brand_getBrandByCtegory.action",			
+				url : "${pageContext.request.contextPath}/goods_getBrandByCtegory.action",
 				success : function(data) {
-					 var json = eval(data); //数组       
-		             $.each(json, function (index, item) {
-		                 //循环获取数据  
-		                 var name = json[index].cnName;
-		                 var id = json[index].id;
-		                 var opt="<option value="+id+">"+name+"</option>";
-		                 $("#brandId").append(opt);
-		             });
-				}		
+					var json = eval(data); //数组       
+					$.each(json, function(index, item) {
+					//循环获取数据  
+						var name = json[index].cnName;
+						var id = json[index].id;
+						var opt = "<option value="+id+">" + name + "</option>";
+						$("#brandId").append(opt);
+					});
+				}
 			});
 		}
 	}
