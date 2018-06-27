@@ -342,19 +342,19 @@ function shipping(orderId,addressId,address){
 		closeBtn: 1,
 		content : $("#shipping"),
 		yes: function(index, layero){
-			if($("#logisticsName").val()){
+			if(!$("#logisticsName").val()){
 				layer.tips('请输入物流名称！', '#logisticsName');
 				return;
 			}
-			if($("#logisticsNo").val()){
+			if(!$("#logisticsNo").val()){
 				layer.tips('请输入物流单号！', '#logisticsNo');
 				return;
 			}
-			if($("#logisticsFee").val()){
-				layer.tips('请输客户订单运费！', '#logisticsNo');
+			if(!$("#logisticsFee").val()){
+				layer.tips('请输客户订单运费！', '#logisticsFee');
 				return;
 			}
-			if($("#deliveryAmount").val()){
+			if(!$("#deliveryAmount").val()){
 				layer.tips('请输入物流公司运费！', '#deliveryAmount');
 				return;
 			}
