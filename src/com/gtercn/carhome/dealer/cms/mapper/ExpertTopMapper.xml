@@ -19,7 +19,7 @@
 	<select id="queryAllData" resultType="com.gtercn.carhome.dealer.cms.entity.ExpertTop"
 		parameterType="java.util.Map">
 		select id, 
-		(select nickname from tc_user u where is_inn=0 u.user_id=e.user_id) as user_id,
+		(select nickname from tc_user u where is_inn=0 and u.user_id=e.user_id) as user_id,
 		(select real_name from tc_user u where u.user_id=e.user_id) as expert_name,
 		(select type_value from tb_expert_type t where t.id=e.top_title) as top_title,
 		city_code, expert_discription_short,
@@ -62,7 +62,7 @@
 	<!-- 通过用户id,达人id获取达人 -->
 	<select id="getExcludeExpert" resultType="java.lang.Integer" parameterType="java.lang.String">
 		select count(1) from tb_expert_top
-		where is_inn=0 user_id = #{userId,jdbcType=VARCHAR}
+		where is_inn=0 and user_id = #{userId,jdbcType=VARCHAR}
 		<if test="expertId!=null and expertId!=''">
   			and id != #{expertId}
   		</if>
