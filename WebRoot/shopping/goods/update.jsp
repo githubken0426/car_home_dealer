@@ -2,7 +2,7 @@
 <%@include file="/jsp/common/common.jsp"%>
 <%
 String path = request.getContextPath();
-String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 %>
 <%
 response.setHeader("Pragma","No-cache");
@@ -15,18 +15,18 @@ response.flushBuffer();
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title>修改</title>
-	<link rel="stylesheet" href="<%=path %>/css/pubmain.css" />
-	<link href="<%=path %>/css/commen.css" rel="stylesheet" type="text/css"/>
-	<link href="<%=path %>/css/global.css" rel="stylesheet" type="text/css"/>
-	<link href="<%=path %>/js/webuploader/webuploader.css" rel="stylesheet" type="text/css"/>
-    <link href="<%=path %>/js/webuploader/preview.css" rel="stylesheet" type="text/css"/>
+	<link rel="stylesheet" href="<%=basePath %>/css/pubmain.css" />
+	<link href="<%=basePath %>/css/commen.css" rel="stylesheet" type="text/css"/>
+	<link href="<%=basePath %>/css/global.css" rel="stylesheet" type="text/css"/>
+	<link href="<%=basePath %>/js/webuploader/webuploader.css" rel="stylesheet" type="text/css"/>
+    <link href="<%=basePath %>/js/webuploader/preview.css" rel="stylesheet" type="text/css"/>
     
-	<script type="text/javascript" src="<%=path %>/js/jquery1.9.0.min.js"></script>
-	<script type="text/javascript" src="<%=path%>/js/layer/layer.js"></script>
-    <script type="text/javascript" src="<%=path%>/js/webuploader/webuploader.min.js"></script>
-    <script type="text/javascript" src="<%=path%>/js/webuploader/previewSmall.js"></script>
-    <script type="text/javascript" src="<%=path%>/js/webuploader/previewBig.js"></script>
-    <script type="text/javascript" src="<%=path%>/js/webuploader/previewDetail.js"></script>
+	<script type="text/javascript" src="<%=basePath %>/js/jquery1.9.0.min.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/layer/layer.js"></script>
+    <script type="text/javascript" src="<%=basePath%>/js/webuploader/webuploader.min.js"></script>
+    <script type="text/javascript" src="<%=basePath%>/js/webuploader/previewSmall.js"></script>
+    <script type="text/javascript" src="<%=basePath%>/js/webuploader/previewBig.js"></script>
+    <script type="text/javascript" src="<%=basePath%>/js/webuploader/previewDetail.js"></script>
 <script type="text/javascript">
 	function deleteImg(type,index){
 		$("#"+type+"Del_"+index).remove();
