@@ -34,4 +34,9 @@ public class OrderServiceImpl implements OrderService {
 	public List<ExpertTop> queryAllExpert(String cityCode) {
 		return orderDao.queryAllExpert(cityCode);
 	}
+
+	@Override
+	public int updateOrderMessageFlag(String orderNo) {
+		return orderDao.updateOrderMessageFlag(orderNo);
+	}
 }

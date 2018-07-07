@@ -176,8 +176,8 @@ response.flushBuffer();
 			       	 	<td nowrap="nowrap" width="5%"><input type="checkbox" id="isSelectAll"/></td>
 						<!--  检索结果表格题头 -->
 						<td nowrap="nowrap" width="13%"><strong>订单号</strong></td>
-						<td nowrap="nowrap" width="8%"><strong>购买用户</strong></td>
-						<td nowrap="nowrap" width="8%"><strong>助销达人</strong></td>
+						<td nowrap="nowrap" width="8%"><strong>用户名称</strong></td>
+						<td nowrap="nowrap" width="8%"><strong>购买账号</strong></td>
 						<td nowrap="nowrap" width="5%"><strong>订单状态</strong></td>
 						<td nowrap="nowrap" width="10%"><strong>下单时间</strong></td>
 						<td nowrap="nowrap" width="10%"><strong>付款时间</strong></td>
@@ -193,7 +193,7 @@ response.flushBuffer();
 						<!--  检索结果表格内容 -->
 						<td title="订单详情"><a href="${pageContext.request.contextPath}/order_detail.action?orderId=${o.id}">${o.orderNo }</a></td>
 						<td>${o.userName }</td>
-						<td>${o.expertName }</td>
+						<td>${o.telphone }</td>
 						<td>
 							<c:choose>
 								<c:when test="${o.orderStatus==1 }">待付款</c:when>
@@ -212,8 +212,8 @@ response.flushBuffer();
 						<td><fmt:formatDate value="${o.payTime }" type="both" pattern="yyyy-MM-dd HH:mm" dateStyle="long"/></td>
 						<td>
 							<c:choose>
-								<c:when test="${o.payChannel eq A }">支付宝</c:when>
-								<c:when test="${o.payChannel eq W }">微信</c:when>
+								<c:when test="${o.payChannel eq 'A' }">支付宝</c:when>
+								<c:when test="${o.payChannel eq 'W' }">微信</c:when>
 								<c:otherwise>无</c:otherwise>
 							</c:choose>
 						</td>
@@ -233,7 +233,7 @@ response.flushBuffer();
 									</c:otherwise>
 								</c:choose>
 							</c:if>
-							<c:if test="${o.flag==1 and o.orderStatus==4}">
+							<c:if test="${o.flag==1 and o.orderStatus==4 and o.sendMessage=='N'}">
 								<a href="javascript:void(0);" onclick="sendMessage('${o.orderNo}','${o.telphone}','${o.shopName}')">短信提醒</a>
 							</c:if>
 						</td>

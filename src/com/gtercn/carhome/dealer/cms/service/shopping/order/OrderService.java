@@ -3,6 +3,8 @@ package com.gtercn.carhome.dealer.cms.service.shopping.order;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.gtercn.carhome.dealer.cms.entity.ExpertTop;
 import com.gtercn.carhome.dealer.cms.entity.shopping.Order;
 
@@ -25,4 +27,6 @@ public interface OrderService {
 	Order selectByPrimaryKey(String id);
 	
 	List<ExpertTop> queryAllExpert(String cityId);
+	
+	int updateOrderMessageFlag(@Param("orderNo")String orderNo);
 }

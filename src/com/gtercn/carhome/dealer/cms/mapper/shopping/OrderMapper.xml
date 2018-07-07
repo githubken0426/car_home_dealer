@@ -13,6 +13,7 @@
 		<result column="pay_time" property="payTime" jdbcType="TIMESTAMP" />
 		<result column="item_count" property="itemCount" jdbcType="INTEGER" />
 		<result column="total_amount" property="totalAmount" jdbcType="VARCHAR" />
+		<result column="send_message" property="sendMessage" jdbcType="VARCHAR" />
 		<result column="payment" property="payment" jdbcType="VARCHAR" />
 		<result column="address_id" property="addressId" jdbcType="VARCHAR" />
 		<result column="logistics_id" property="logisticsId" jdbcType="VARCHAR" />
@@ -44,6 +45,7 @@
 	<!-- 查询所有 -->
 	<select id="queryAllData" resultType="com.gtercn.carhome.dealer.cms.entity.shopping.Order" parameterType="java.util.Map">
 		select O.*,(select login_phone from tc_user L where L.user_id=O.user_id )as telphone ,
+		(select real_name from tc_user L where L.user_id=O.user_id )as userName ,
 		(select expert_name from tb_expert_top L where L.id=O.expert_id )as expertName,
 		(select logistics_no from inn_logistics L where L.id=O.logistics_id )as logisticsNo,
 		(select shop_name from tc_shop S where S.id=O.shop_id) shopName,
@@ -120,5 +122,9 @@
 	<update id="updateOrderLogistics" parameterType="java.lang.String">
 		update inn_order set order_status=4,logistics_id=#{logisticsId,jdbcType=VARCHAR}
 		where id=#{orderId,jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updateOrderMessageFlag" parameterType="java.lang.String">
+		update inn_order set send_message='Y' where order_no=#{orderNo,jdbcType=VARCHAR}
 	</update>
 </mapper>

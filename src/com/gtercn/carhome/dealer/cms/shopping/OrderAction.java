@@ -243,6 +243,8 @@ public class OrderAction extends ActionSupport {
 			String date=CommonUtil.getDaysAfterTime(ApplicationConfig.SERVICE_DAY, format);
 			String orderNo=request.getParameter("sendOrderNo");
 			AliSMSUtils.sendDealerShippedMsg(telphone, orderNo, date, shopName);
+			//更新订单状态
+			orderService.updateOrderMessageFlag(orderNo);
 		} catch (Exception e) {
 			e.printStackTrace();
 			writer.print("<script>alert('发送失败!');window.location.href='order_list.action';</script>");

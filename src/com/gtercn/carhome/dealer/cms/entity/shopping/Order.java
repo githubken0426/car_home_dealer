@@ -12,6 +12,7 @@ public class Order {
 	private Integer flag;//0:客户，1:经销商
 	private String expertId;
 	private String orderNo;//订单号
+	private String sendMessage;
 	/**
 	 * 订单状态
 	 * 1待付款,2已付款(待发货),3关闭订单(超时未付款),
@@ -251,5 +252,11 @@ public class Order {
 	}
 	public void setShopName(String shopName) {
 		this.shopName = shopName;
+	}
+	public String getSendMessage() {
+		return sendMessage;
+	}
+	public void setSendMessage(String sendMessage) {
+		this.sendMessage = sendMessage;
 	}
 }

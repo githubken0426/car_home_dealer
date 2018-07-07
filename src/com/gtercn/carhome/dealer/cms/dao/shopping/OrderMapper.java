@@ -29,4 +29,6 @@ public interface OrderMapper {
 	List<ExpertTop> queryAllExpert(String cityCode);
 	
 	int updateOrderLogistics(@Param("orderId")String orderId,@Param("logisticsId")String logisticsId);
+	
+	int updateOrderMessageFlag(@Param("orderNo")String orderNo);
 }
