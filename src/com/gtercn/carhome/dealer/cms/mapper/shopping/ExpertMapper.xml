@@ -44,8 +44,8 @@
 	
   <!-- 批量删除,collection:参数是数组,为array,集合,为list -->
   <delete id="deleteBatch" parameterType="java.lang.String" >
-  	 delete from tb_expert_top where id
-	    <foreach collection="Array" index="index" item="id" open="(" separator="," close=")">  
+  	 delete from tb_expert_top where id in
+	    <foreach collection="array" index="index" item="id" open="(" separator="," close=")">  
 	      #{id,jdbcType=VARCHAR} 
 	    </foreach>
   </delete>
