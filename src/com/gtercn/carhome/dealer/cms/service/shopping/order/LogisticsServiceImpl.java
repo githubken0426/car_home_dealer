@@ -1,5 +1,7 @@
 package com.gtercn.carhome.dealer.cms.service.shopping.order;
 
+import java.text.SimpleDateFormat;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,7 @@ import com.gtercn.carhome.dealer.cms.entity.shopping.Address;
 import com.gtercn.carhome.dealer.cms.entity.shopping.Logistics;
 import com.gtercn.carhome.dealer.cms.entity.shopping.LogisticsDetail;
 import com.gtercn.carhome.dealer.cms.entity.shopping.Order;
+import com.gtercn.carhome.dealer.cms.util.AliSMSUtils;
 import com.gtercn.carhome.dealer.cms.util.CommonUtil;
 
 @Service(value = "logisticsService")
@@ -98,21 +101,22 @@ public class LogisticsServiceImpl implements LogisticsService {
 		detail.setDescription(ApplicationConfig.LOGISTICS_INFO);
 		logisticsDao.addDetail(detail);
 		// 更新订单
-		orderDao.updateOrderLogistics(orderId, logisticsId);
-		// 成功，发送短信
-		/*SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日");
-		String arriveDate = CommonUtil.getDaysAfterTime(ApplicationConfig.ARRIVE_DAY, format);
-		String serviceDate = CommonUtil.getDaysAfterTime(ApplicationConfig.SERVICE_DAY, format);
-		String orderNo = order.getOrderNo();
-		if (order.getFlag() == 1) {// 经销商
-			AliSMSUtils.sendUserDealerMsg(order.getTelphone(), orderNo, order.getShopName(), arriveDate, serviceDate);
-			String phone = order.getDealerTelphone();
-			String dealerPhone = CommonUtil.matcherPhone(phone);
-			AliSMSUtils.sendDelaerMsg(dealerPhone, order.getUserName(), orderNo, arriveDate);
-		} else {
-			AliSMSUtils.sendUserSelfMsg(order.getTelphone(), orderNo, arriveDate);
-		}*/
-		return 1;
+		int result =orderDao.updateOrderLogistics(orderId, logisticsId);
+		if (result == 1) {
+			// 成功，发送短信
+			SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日");
+			String arriveDate = CommonUtil.getDaysAfterTime(ApplicationConfig.ARRIVE_DAY, format);
+			String serviceDate = CommonUtil.getDaysAfterTime(ApplicationConfig.SERVICE_DAY, format);
+			String orderNo = order.getOrderNo();
+			if (order.getFlag() == 1) {// 经销商
+				AliSMSUtils.sendUserDealerMsg(order.getTelphone(), orderNo, order.getShopName(), arriveDate, serviceDate);
+				String phone = order.getDealerTelphone();
+				String dealerPhone = CommonUtil.matcherPhone(phone);
+				AliSMSUtils.sendDelaerMsg(dealerPhone, order.getUserName(), orderNo, arriveDate);
+			} else {
+				AliSMSUtils.sendUserSelfMsg(order.getTelphone(), orderNo, arriveDate);
+			}
+		}
+		return result;
 	}
-
 }
